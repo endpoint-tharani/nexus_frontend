@@ -1,0 +1,219 @@
+/* Form 16 Viewer Stylesheet */
+
+.form16-viewer-root {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 64px);
+  overflow: hidden;
+  background-color: #f1f5f9;
+}
+
+/* Toolbar for actions */
+.form16-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Scroll container for A4 sheet */
+.form16-scroll-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* A4 Container centered on desktop */
+.form16-a4-sheet {
+  width: 210mm;
+  min-height: 297mm;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  box-sizing: border-box;
+  padding: 15mm;
+  margin-bottom: 24px;
+  border: 1px solid #000000;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000000;
+}
+
+/* Force page break when printing or generating PDF */
+.form16-page-break {
+  page-break-before: always;
+  margin-top: 15mm;
+  border-top: 1px dashed #000000;
+  padding-top: 15mm;
+}
+
+/* General typography */
+.form16-title-main {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.form16-title-sub {
+  font-size: 10px;
+  text-align: center;
+  margin: 2px 0 8px 0;
+}
+
+.form16-header-desc {
+  font-size: 11px;
+  font-weight: bold;
+  text-align: center;
+  margin: 8px 0 16px 0;
+  line-height: 1.4;
+}
+
+/* Table styles */
+.form16-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  font-size: 10px;
+}
+
+.form16-table th,
+.form16-table td {
+  border: 1px solid #000000;
+  padding: 4px 6px;
+  vertical-align: top;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.form16-table th {
+  background-color: #f8fafc;
+  font-weight: bold;
+  text-align: center;
+}
+
+.form16-table-title {
+  font-size: 11px;
+  font-weight: bold;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+/* Utility alignments and styles */
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.text-bold {
+  font-weight: bold !important;
+}
+
+.w-50 {
+  width: 50%;
+}
+
+.w-25 {
+  width: 25%;
+}
+
+.w-10 {
+  width: 10%;
+}
+
+/* Logo block */
+.form16-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 12px;
+}
+
+.form16-logo {
+  height: 32px;
+  max-width: 150px;
+  object-fit: contain;
+}
+
+/* Verification and Signature styles */
+.form16-verification-container {
+  margin-top: 24px;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.form16-sign-section {
+  margin-top: 32px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.form16-sign-block {
+  width: 200px;
+  text-align: center;
+  border-top: 1px solid #000000;
+  padding-top: 4px;
+  margin-top: 24px;
+}
+
+/* Print Overrides */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide app framework components */
+  /* Sidebar, Header, Toolbar, Breadcrumbs, etc. are hidden */
+  header,
+  footer,
+  aside,
+  nav,
+  .no-print,
+  .form16-toolbar,
+  .sidebar-container,
+  .navbar-container,
+  .MuiDrawer-root,
+  .MuiAppBar-root {
+    display: none !important;
+  }
+
+  .form16-viewer-root {
+    height: auto !important;
+    overflow: visible !important;
+    background-color: #ffffff !important;
+  }
+
+  .form16-scroll-container {
+    padding: 0 !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  .form16-a4-sheet {
+    width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    page-break-after: avoid;
+  }
+
+  .form16-page-break {
+    page-break-before: always !important;
+    margin-top: 0 !important;
+    border-top: none !important;
+    padding-top: 20mm !important;
+  }
+}
