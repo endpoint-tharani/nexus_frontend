@@ -13,9 +13,9 @@ export default function AuthHeader({ title, subtitle }: AuthHeaderProps) {
         component="h1"
         sx={{
           fontWeight: 700,
-          fontSize: "36px",
-          lineHeight: "44px",
-          color: "#111827",
+          fontSize: { xs: "1.75rem", sm: "2rem" },
+          lineHeight: 1.2,
+          color: "text.primary",
           letterSpacing: "-0.02em",
         }}
       >
@@ -26,9 +26,9 @@ export default function AuthHeader({ title, subtitle }: AuthHeaderProps) {
           variant="body1"
           sx={{
             fontWeight: 400,
-            fontSize: "18px",
-            lineHeight: "26px",
-            color: "#6B7280",
+            fontSize: "1rem",
+            lineHeight: 1.6,
+            color: "text.secondary",
           }}
         >
           {subtitle}

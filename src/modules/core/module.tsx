@@ -2,7 +2,7 @@ import { lazy } from "react";
 import { MdAccountTree, MdBusiness, MdDashboard, MdDevices, MdPerson } from "react-icons/md";
 
 import { CompanyRole } from "../../constants/enums";
-import { useBranches } from "../../hooks/branch";
+import { useActiveBranch, useBranches } from "../../hooks/branch";
 import { useDepartments } from "../../hooks/department";
 import { StatCard } from "../../components/ui";
 import type { ModuleDefinition } from "../types";
@@ -35,7 +35,11 @@ function BranchCountWidget() {
 }
 
 function DepartmentCountWidget() {
-  const { data = [], isLoading } = useDepartments();
+  const { selectedBranchId } = useActiveBranch();
+  const { data = [], isLoading } = useDepartments({
+    branchId: selectedBranchId || undefined,
+    enabled: Boolean(selectedBranchId),
+  });
   return (
     <StatCard
       label="Departments"
@@ -61,13 +65,13 @@ export const coreModule: ModuleDefinition = {
       label: "Organization",
       icon: MdBusiness,
       items: [
-        { label: "Organization", path: "/dashboard/organization", icon: MdBusiness, roles: ORG_ADMINS },
-        { label: "Branches", path: "/dashboard/branches", icon: MdBusiness, roles: BRANCH_ADMINS },
         { label: "Departments", path: "/dashboard/departments", icon: MdAccountTree, roles: DEPARTMENT_ADMINS },
       ],
     },
   ],
   accountNav: [
+    { label: "Organization settings", path: "/dashboard/organization", icon: MdBusiness, roles: ORG_ADMINS },
+    { label: "Manage branches", path: "/dashboard/branches", icon: MdBusiness, roles: BRANCH_ADMINS },
     { label: "Profile", path: "/dashboard/profile", icon: MdPerson, roles: ALL },
     { label: "Sessions", path: "/dashboard/sessions", icon: MdDevices, roles: ALL },
   ],

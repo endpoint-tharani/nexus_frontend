@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import {
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -26,6 +27,7 @@ import { queryKeys } from "../../constants/queryKeys";
 import { CompanyRole } from "../../constants/enums";
 import type { Branch, BranchPayload } from "../../types";
 import { getErrorMessage } from "../../utils/errorHandler";
+import { useBranchStore } from "../../store/branch.store";
 
 const emptyForm: BranchPayload = { name: "", code: "" };
 
@@ -40,6 +42,21 @@ export default function Branches() {
   const [deleteTarget, setDeleteTarget] = useState<Branch | null>(null);
   const [form, setForm] = useState<BranchPayload>(emptyForm);
   const [formError, setFormError] = useState("");
+  const createRequested = useBranchStore((state) => state.createRequested);
+  const clearBranchCreateRequest = useBranchStore((state) => state.clearBranchCreateRequest);
+  const activeForm = createRequested ? emptyForm : form;
+  const activeEditing = createRequested ? null : editing;
+
+  const updateForm = (update: (current: BranchPayload) => BranchPayload) => {
+    if (createRequested) {
+      setForm(update(emptyForm));
+      setEditing(null);
+      setDialogOpen(true);
+      clearBranchCreateRequest();
+      return;
+    }
+    setForm(update);
+  };
 
   const refresh = () => {
     if (!companyId) return;
@@ -50,14 +67,15 @@ export default function Branches() {
   const saveMutation = useMutation({
     mutationFn: async (values: BranchPayload) => {
       if (!companyId) throw new Error("No organization is selected.");
-      return editing
-        ? updateBranch(editing.id, companyId, values)
+      return activeEditing
+        ? updateBranch(activeEditing.id, companyId, values)
         : createBranch(companyId, values);
     },
     onSuccess: () => {
       refresh();
-      toast.success(editing ? "Branch updated" : "Branch created");
+      toast.success(activeEditing ? "Branch updated" : "Branch created");
       setDialogOpen(false);
+      clearBranchCreateRequest();
     },
     onError: (error) => toast.error(getErrorMessage(error)),
   });
@@ -76,6 +94,7 @@ export default function Branches() {
   });
 
   const openCreate = () => {
+    clearBranchCreateRequest();
     setEditing(null);
     setForm(emptyForm);
     setFormError("");
@@ -83,6 +102,7 @@ export default function Branches() {
   };
 
   const openEdit = (branch: Branch) => {
+    clearBranchCreateRequest();
     setEditing(branch);
     setForm({
       name: branch.name,
@@ -98,10 +118,16 @@ export default function Branches() {
   };
 
   const submit = () => {
+    if (createRequested) {
+      setForm(emptyForm);
+      setEditing(null);
+      setDialogOpen(true);
+      clearBranchCreateRequest();
+    }
     const values = {
-      ...form,
-      name: form.name.trim(),
-      code: form.code.trim(),
+      ...activeForm,
+      name: activeForm.name.trim(),
+      code: activeForm.code.trim(),
     };
     if (!values.name || !values.code) {
       setFormError("Branch name and code are required.");
@@ -127,7 +153,14 @@ export default function Branches() {
       {
         id: "status",
         header: "Status",
-        cell: ({ row }) => (row.original.isActive ? "Active" : "Inactive"),
+        cell: ({ row }) => (
+          <Chip
+            size="small"
+            label={row.original.isActive ? "Active" : "Inactive"}
+            color={row.original.isActive ? "success" : "default"}
+            variant="outlined"
+          />
+        ),
       },
     ],
     [],
@@ -175,43 +208,65 @@ export default function Branches() {
         }
       />
 
-      <Dialog open={dialogOpen} onClose={() => !saveMutation.isPending && setDialogOpen(false)} fullWidth maxWidth="sm">
-        <DialogTitle>{editing ? "Edit branch" : "Add branch"}</DialogTitle>
-        <DialogContent>
+      <Dialog
+        open={dialogOpen || createRequested}
+        onClose={() => {
+          if (saveMutation.isPending) return;
+          setDialogOpen(false);
+          clearBranchCreateRequest();
+        }}
+        fullWidth
+        maxWidth="sm"
+        scroll="paper"
+        slotProps={{ paper: { sx: { mx: { xs: 1.5, sm: 2 }, width: "100%" } } }}
+      >
+        <DialogTitle sx={{ pb: 1 }}>{activeEditing ? "Edit branch" : "Add branch"}</DialogTitle>
+        <DialogContent sx={{ pt: 1 }}>
           <Stack spacing={2} sx={{ pt: 1 }}>
             <TextField
               autoFocus
               required
               label="Branch name"
-              value={form.name}
-              onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
+              value={activeForm.name}
+              onChange={(event) => updateForm((current) => ({ ...current, name: event.target.value }))}
             />
             <TextField
               required
               label="Branch code"
-              value={form.code}
-              onChange={(event) => setForm((current) => ({ ...current, code: event.target.value }))}
+              value={activeForm.code}
+              onChange={(event) => updateForm((current) => ({ ...current, code: event.target.value }))}
             />
+            <Typography variant="overline" color="text.secondary" sx={{ pt: 0.5 }}>
+              Location
+            </Typography>
             <TextField
               label="Address"
-              value={form.addressLine ?? ""}
-              onChange={(event) => setForm((current) => ({ ...current, addressLine: event.target.value }))}
+              value={activeForm.addressLine ?? ""}
+              onChange={(event) => updateForm((current) => ({ ...current, addressLine: event.target.value }))}
             />
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-              <TextField label="City" value={form.city ?? ""} onChange={(event) => setForm((current) => ({ ...current, city: event.target.value }))} fullWidth />
-              <TextField label="State" value={form.state ?? ""} onChange={(event) => setForm((current) => ({ ...current, state: event.target.value }))} fullWidth />
+              <TextField label="City" value={activeForm.city ?? ""} onChange={(event) => updateForm((current) => ({ ...current, city: event.target.value }))} fullWidth />
+              <TextField label="State" value={activeForm.state ?? ""} onChange={(event) => updateForm((current) => ({ ...current, state: event.target.value }))} fullWidth />
             </Stack>
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-              <TextField label="Country" value={form.country ?? ""} onChange={(event) => setForm((current) => ({ ...current, country: event.target.value }))} fullWidth />
-              <TextField label="Postal code" value={form.pinCode ?? ""} onChange={(event) => setForm((current) => ({ ...current, pinCode: event.target.value }))} fullWidth />
+              <TextField label="Country" value={activeForm.country ?? ""} onChange={(event) => updateForm((current) => ({ ...current, country: event.target.value }))} fullWidth />
+              <TextField label="Postal code" value={activeForm.pinCode ?? ""} onChange={(event) => updateForm((current) => ({ ...current, pinCode: event.target.value }))} fullWidth />
             </Stack>
-            {formError && <Typography color="error" variant="body2">{formError}</Typography>}
+            {!createRequested && formError && <Typography color="error" variant="body2">{formError}</Typography>}
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)} disabled={saveMutation.isPending}>Cancel</Button>
+          <Button
+            onClick={() => {
+              setDialogOpen(false);
+              clearBranchCreateRequest();
+            }}
+            disabled={saveMutation.isPending}
+          >
+            Cancel
+          </Button>
           <Button onClick={submit} variant="contained" disabled={saveMutation.isPending}>
-            {editing ? "Save changes" : "Create branch"}
+            {activeEditing ? "Save changes" : "Create branch"}
           </Button>
         </DialogActions>
       </Dialog>

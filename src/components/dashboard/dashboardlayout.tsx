@@ -2,14 +2,18 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import {
   Box,
-  Button,
   Chip,
   Collapse,
   Drawer,
+  FormControl,
+  InputAdornment,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
   Typography,
   IconButton,
   Divider,
@@ -24,6 +28,7 @@ import {
   MdChevronLeft,
   MdNotificationsNone,
   MdExpandMore,
+  MdAdd,
   MdSearch,
 } from "react-icons/md";
 import toast from "react-hot-toast";
@@ -37,6 +42,9 @@ import { Logo, ThemeSwitcher } from "../common";
 import { useAuthStore } from "../../store/auth.store";
 import { useCompanyStore } from "../../store/company.store";
 import { useMe } from "../../hooks/user";
+import { useActiveBranch } from "../../hooks/branch";
+import { useBranchStore } from "../../store/branch.store";
+import { CompanyRole } from "../../constants/enums";
 import { useSidebar, usePageTitle } from "../../core/navigation";
 import { logout as logoutApi } from "../../api/auth.api";
 import { clearAppSession } from "../../utils/logout";
@@ -74,6 +82,8 @@ export default function DashboardLayout() {
   const setCompany = useCompanyStore((s) => s.setCompany);
 
   const { data: me } = useMe();
+  const { branches, selectedBranchId, selectBranch } = useActiveBranch();
+  const requestBranchCreate = useBranchStore((state) => state.requestBranchCreate);
 
   const { sections, accountItems } = useSidebar();
   const pageTitle = usePageTitle(location.pathname);
@@ -285,7 +295,10 @@ export default function DashboardLayout() {
 
   const displayName = me?.name ?? user?.name;
   const displayEmail = me?.email ?? user?.email;
-  const companyName = company?.name ?? "Auronox workspace";
+  const role = me?.role ?? user?.role;
+  const canManageBranches =
+    role === CompanyRole.OWNER ||
+    role === CompanyRole.ADMIN;
 
   const drawerContent = (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
@@ -447,7 +460,15 @@ export default function DashboardLayout() {
 
   // Topbar right-hand controls
   const topbarControls = (
-    <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 } }}>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: { xs: "flex-end", md: "initial" },
+        width: { xs: "100%", md: "auto" },
+        gap: { xs: 0.5, sm: 1 },
+      }}
+    >
       {/* Ctrl+K search trigger */}
       <Tooltip title={<>Search <Chip label="Ctrl K" size="small" sx={{ height: 16, fontSize: "0.65rem", ml: 0.5, bgcolor: "rgba(255,255,255,0.15)", color: "inherit" }} /></>}>
         <IconButton
@@ -514,28 +535,65 @@ export default function DashboardLayout() {
         />
       </Box>
 
-      {!isMobile && (
-        <Tooltip title="Company switching coming soon">
-          <span>
-            <Button
-              color="inherit"
-              disabled
-              startIcon={<MdBusiness size={17} />}
-              endIcon={<MdExpandMore size={16} />}
+      {branches.length > 0 && (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <FormControl size="small" sx={{ width: { xs: 128, sm: 180, md: 210 } }}>
+            <Select
+              value={selectedBranchId}
+              disabled={branches.length < 2}
+              onChange={(event) => selectBranch(event.target.value)}
+              input={
+                <OutlinedInput
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <MdBusiness size={17} />
+                    </InputAdornment>
+                  }
+                  sx={{ height: 38, borderRadius: 2, fontSize: "0.8125rem" }}
+                />
+              }
+              inputProps={{ "aria-label": "Switch branch" }}
+              renderValue={(branchId) =>
+                branches.find((branch) => branch.id === branchId)?.name ?? "Select branch"
+              }
               sx={{
-                textTransform: "none",
-                color: "text.primary",
-                maxWidth: 180,
-                fontSize: "0.8125rem",
-                fontWeight: 500,
+                "& .MuiSelect-select": {
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  py: 0.75,
+                },
               }}
             >
-              <Box component="span" sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {companyName}
-              </Box>
-            </Button>
-          </span>
-        </Tooltip>
+              {branches.map((branch) => (
+                <MenuItem key={branch.id} value={branch.id}>
+                  {branch.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {canManageBranches && (
+            <Tooltip title="Add branch">
+              <IconButton
+                size="small"
+                aria-label="Add branch"
+                onClick={() => {
+                  requestBranchCreate();
+                  navigate("/dashboard/branches");
+                }}
+                sx={{
+                  width: 36,
+                  height: 36,
+                  border: "1px solid",
+                  borderColor: "divider",
+                  borderRadius: 2,
+                }}
+              >
+                <MdAdd size={19} />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Box>
       )}
 
       <Tooltip title="Notifications">
@@ -607,6 +665,8 @@ export default function DashboardLayout() {
             alignItems: "center",
             justifyContent: "space-between",
             gap: 2,
+            flexWrap: { xs: "wrap", md: "nowrap" },
+            py: { xs: 1, md: 0 },
             borderBottom: "1px solid",
             borderColor: "divider",
             bgcolor: "background.paper",
