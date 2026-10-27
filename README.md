@@ -60,7 +60,7 @@ The design-system primitives live in `src/components/ui` (`PageHeader`,
 
 ```bash
 npm install
-cp .env.example .env   # then edit .env with your API URL
+cp .env.example .env
 ```
 
 ### Environment Variables
@@ -69,10 +69,12 @@ Only `VITE_`-prefixed variables are exposed to the client. See `.env.example`.
 
 | Variable       | Required | Description                                              |
 | -------------- | -------- | -------------------------------------------------------- |
-| `VITE_API_URL` | No\*     | Base URL of the backend API, including `/api`. Defaults to `https://nexus-backend-dun-iota.vercel.app/api` when unset. |
+| `VITE_API_URL` | Yes for production | Base URL of the backend API, including `/api`. |
+| `VITE_API_PROXY_TARGET` | Yes for local development | Backend origin used by Vite's `/api` proxy, without the `/api` path. |
 
-\* Recommended in every environment so the build is never silently pointed at
-the hosted default.
+Set both values in `.env` for local development. Set `VITE_API_URL` in the
+deployment host's build environment for production; production builds fail if
+it is missing.
 
 ---
 

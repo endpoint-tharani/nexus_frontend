@@ -6,12 +6,14 @@ import type {
 } from "axios";
 import type { ApiErrorBody } from "../types";
 
-// Base URL comes from the environment, with the deployed API as a fallback.
-export const API_BASE_URL: string =
-  import.meta.env.VITE_API_URL ??
-  (import.meta.env.DEV
-    ? "/api"
-    : "https://nexus-backend-dun-iota.vercel.app/api");
+const configuredApiUrl = import.meta.env.VITE_API_URL;
+if (!import.meta.env.DEV && !configuredApiUrl) {
+  throw new Error("VITE_API_URL must be set for production builds.");
+}
+
+export const API_BASE_URL: string = import.meta.env.DEV
+  ? "/api"
+  : configuredApiUrl;
 
 const ACCESS_TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
