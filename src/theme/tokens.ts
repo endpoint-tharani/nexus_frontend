@@ -73,7 +73,7 @@ export const neutral = {
 // (Group these so a `darkSurface` sibling can later flip the whole app.)
 // -----------------------------------------------------------------------------
 export const lightSurface = {
-  background: "#F8FAFC", // app canvas
+  background: "#F7F8FA", // app canvas
   paper: "#FFFFFF", // cards, sheets, menus
   subtle: neutral[100], // muted fills (inputs, hover rows)
   text: {

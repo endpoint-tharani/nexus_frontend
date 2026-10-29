@@ -2,12 +2,9 @@ import { useMemo, useState } from "react";
 import {
   Box,
   Button,
-  FormControl,
   IconButton,
   InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
+  Paper,
   TextField,
   Tooltip,
   Typography,
@@ -24,7 +21,7 @@ import {
   useUpdateDepartment,
   useDeleteDepartment,
 } from "../../hooks/department";
-import { useBranches } from "../../hooks/branch";
+import { useActiveBranch } from "../../hooks/branch";
 import { useCurrentRole, useMe } from "../../hooks/user";
 import { CompanyRole } from "../../constants/enums";
 import type { CreateDepartmentPayload, Department } from "../../types";
@@ -36,13 +33,7 @@ type FormMode = "create" | "edit";
 export default function Departments() {
   const { data: me } = useMe();
   const role = useCurrentRole();
-  const { data: branches = [] } = useBranches();
-  const [branchSelection, setBranchSelection] = useState("");
-  const selectedBranchId =
-    me?.branchId ??
-    (branches.some((branch) => branch.id === branchSelection)
-      ? branchSelection
-      : branches[0]?.id ?? "");
+  const { branches, selectedBranchId } = useActiveBranch();
 
   const {
     data: departments = [],
@@ -197,28 +188,26 @@ export default function Departments() {
         }
       />
 
-      <Box sx={{ display: "flex", gap: 2, alignItems: "center", flexWrap: "wrap", mb: 2 }}>
-        <FormControl size="small" sx={{ minWidth: 240 }}>
-          <InputLabel id="department-branch-label">Branch</InputLabel>
-          <Select
-            labelId="department-branch-label"
-            label="Branch"
-            value={selectedBranchId}
-            onChange={(event) => setBranchSelection(event.target.value)}
-            disabled={Boolean(me?.branchId)}
-          >
-            {branches.map((branch) => (
-              <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <TextField
+      <Paper
+        variant="outlined"
+        sx={{
+          display: "flex",
+          gap: 1.5,
+          alignItems: "center",
+          flexWrap: "wrap",
+          p: { xs: 1.5, sm: 2 },
+          mb: 2,
+          borderRadius: 2,
+        }}
+      >
+0        <TextField
           placeholder="Search departments..."
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           size="small"
           sx={{ width: { xs: "100%", sm: 320 } }}
           slotProps={{
+            htmlInput: { "aria-label": "Search departments" },
             input: {
               startAdornment: (
                 <InputAdornment position="start"><MdSearch size={18} /></InputAdornment>
@@ -226,7 +215,7 @@ export default function Departments() {
             },
           }}
         />
-      </Box>
+      </Paper>
 
       <DataTable
         columns={columns}

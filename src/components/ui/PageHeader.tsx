@@ -36,7 +36,7 @@ export default function PageHeader({
   divider = false,
 }: PageHeaderProps) {
   return (
-    <Box sx={{ mb: 2 }}>
+    <Box sx={{ mb: 3 }}>
       {breadcrumbs && breadcrumbs.length > 0 && (
         <Breadcrumbs
           separator={<MdChevronRight size={14} />}
@@ -82,7 +82,17 @@ export default function PageHeader({
         }}
       >
         <Box sx={{ minWidth: 0 }}>
-          <Typography variant="h5" sx={{ fontWeight: 700, lineHeight: 1.3, color: "text.primary" }}>
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={{
+              fontSize: { xs: "1.375rem", sm: "1.625rem" },
+              fontWeight: 700,
+              lineHeight: 1.25,
+              letterSpacing: "-0.025em",
+              color: "text.primary",
+            }}
+          >
             {title}
           </Typography>
           {subtitle && (

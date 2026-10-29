@@ -27,8 +27,8 @@ export default function PageContainer({
         width: "100%",
         maxWidth: maxWidth === "full" ? "100%" : maxWidth,
         mx: "auto",
-        px: disableGutters ? 0 : { xs: 1.5, sm: 2 },
-        py: { xs: 1.5, sm: 2 },
+        px: disableGutters ? 0 : { xs: 2, sm: 3, lg: 4 },
+        py: { xs: 2.5, sm: 3.5 },
         ...sx,
       }}
     >

@@ -1,32 +1,39 @@
+
 name: Frontend Build Check
 
 on:
-pull_request:
-branches:
-- main
-- test
+  pull_request:
+    branches:
+      - main
+      - test
+
+  push:
+    branches:
+      - main
+      - test
 
 jobs:
-build:
-runs-on: ubuntu-latest
+  frontend-test:
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-steps:
-  - name: Checkout Code
-    uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
 
-  - name: Setup Node.js
-    uses: actions/setup-node@v4
-    with:
-      node-version: 24
-      cache: npm
+      - name: Install Dependencies
+        run: npm ci
 
-  - name: Install Dependencies
-    run: npm ci
+      - name: Type Check
+        run: npx tsc --noEmit
 
-  - name: Type Check
-    run: npx tsc --noEmit
+      - name: Run Frontend Tests
+        run: npm test -- --run
 
-  - name: Build Application
-    run: npm run build
-
+      - name: Build Application
+        run: npm run build
