@@ -20,6 +20,7 @@ const ALL = [OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, HR, EMPLOYEE, SUPER_A
 const ORG_ADMINS = [OWNER, ADMIN, SUPER_ADMIN] as const;
 const BRANCH_ADMINS = [OWNER, ADMIN, BRANCH_ADMIN, SUPER_ADMIN] as const;
 const DEPARTMENT_ADMINS = [OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, SUPER_ADMIN] as const;
+const ORG_MANAGERS = [OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, SUPER_ADMIN] as const;
 
 function BranchCountWidget() {
   const { data = [], isLoading } = useBranches();
@@ -59,19 +60,11 @@ export const coreModule: ModuleDefinition = {
   nav: [
     {
       label: "",
-      items: [{ label: "Overview", path: "/dashboard", icon: MdDashboard, roles: ALL }],
-    },
-    {
-      label: "Organization",
-      icon: MdBusiness,
-      items: [
-        { label: "Departments", path: "/dashboard/departments", icon: MdAccountTree, roles: DEPARTMENT_ADMINS },
-      ],
+      items: [{ label: "Dashboard", path: "/dashboard", icon: MdDashboard, roles: ALL }],
     },
   ],
   accountNav: [
-    { label: "Organization settings", path: "/dashboard/organization", icon: MdBusiness, roles: ORG_ADMINS },
-    { label: "Manage branches", path: "/dashboard/branches", icon: MdBusiness, roles: BRANCH_ADMINS },
+    { label: "Manage Organization", path: "/dashboard/organization-manager", icon: MdBusiness, roles: ORG_MANAGERS },
     { label: "Profile", path: "/dashboard/profile", icon: MdPerson, roles: ALL },
     { label: "Sessions", path: "/dashboard/sessions", icon: MdDevices, roles: ALL },
   ],

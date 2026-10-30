@@ -18,6 +18,10 @@ import {
   IconButton,
   Divider,
   Tooltip,
+  Button,
+  Alert,
+  CircularProgress,
+  Paper,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -42,6 +46,7 @@ import { Logo, ThemeSwitcher } from "../common";
 import { useAuthStore } from "../../store/auth.store";
 import { useCompanyStore } from "../../store/company.store";
 import { useMe } from "../../hooks/user";
+import { useCompany } from "../../hooks/company";
 import { useActiveBranch } from "../../hooks/branch";
 import { useBranchStore } from "../../store/branch.store";
 import { CompanyRole } from "../../constants/enums";
@@ -72,6 +77,7 @@ export default function DashboardLayout() {
   const [paletteOpen, setPaletteOpen] = useState(false);
   // Which collapsible nav groups are expanded.
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+  const [pendingBranchId, setPendingBranchId] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -81,12 +87,30 @@ export default function DashboardLayout() {
   const company = useCompanyStore((s) => s.company);
   const setCompany = useCompanyStore((s) => s.setCompany);
 
-  const { data: me } = useMe();
-  const { branches, selectedBranchId, selectBranch } = useActiveBranch();
+  const { data: me, isLoading: meLoading } = useMe();
+  const { branches, selectedBranchId, selectBranch, isLoading: branchesLoading, error: branchesError, refetch: refetchBranches } = useActiveBranch();
   const requestBranchCreate = useBranchStore((state) => state.requestBranchCreate);
 
   const { sections, accountItems } = useSidebar();
   const pageTitle = usePageTitle(location.pathname);
+  const organizationId = me?.company?.id ?? me?.companyId ?? company?.id ?? "";
+  const { data: organizationDetails, isLoading: organizationLoading } = useCompany({ enabled: Boolean(organizationId) });
+  const organizationName = organizationDetails?.name || me?.company?.name || company?.name || (organizationLoading ? "Loading organization…" : "Organization");
+  const selectionRequired = meLoading || (Boolean(organizationId) && !selectedBranchId);
+
+  // A single authorized branch is unambiguous, so restore a usable session
+  // without asking the user to make a redundant selection.
+  useEffect(() => {
+    if (
+      organizationId &&
+      !branchesLoading &&
+      !branchesError &&
+      !selectedBranchId &&
+      branches.length === 1
+    ) {
+      selectBranch(branches[0].id);
+    }
+  }, [organizationId, branches, branchesLoading, branchesError, selectedBranchId, selectBranch]);
 
   // 1. Synchronize profile details into local state stores only when values actually change
   useEffect(() => {
@@ -579,7 +603,7 @@ export default function DashboardLayout() {
                 aria-label="Add branch"
                 onClick={() => {
                   requestBranchCreate();
-                  navigate("/dashboard/branches");
+                  navigate("/dashboard/organization-manager?tab=branches");
                 }}
                 sx={{
                   width: 36,
@@ -607,6 +631,60 @@ export default function DashboardLayout() {
       <ThemeSwitcher />
     </Box>
   );
+
+  if (selectionRequired) {
+    const canContinue = Boolean(organizationId && pendingBranchId) &&
+      branches.some((branch) => branch.id === pendingBranchId);
+
+    return (
+      <Box sx={{ minHeight: "100vh", bgcolor: "#f7f9fc", display: "grid", placeItems: "center", px: 2, py: 4 }}>
+        <Paper elevation={0} sx={{ width: "100%", maxWidth: 560, p: { xs: 2.5, sm: 4 }, border: "1px solid", borderColor: "#dce3eb", borderRadius: 3, boxShadow: "0 2px 4px rgba(15, 23, 42, 0.08)" }}>
+          <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}><Logo size={30} /></Box>
+          <Box sx={{ textAlign: "center", mb: 3.5 }}>
+            <Box sx={{ mx: "auto", mb: 2, width: 56, height: 56, borderRadius: 2, bgcolor: "#edf6ff", color: "primary.main", display: "grid", placeItems: "center" }}><MdBusiness size={28} /></Box>
+            <Typography variant="h5" sx={{ fontWeight: 700 }}>Select organization and branch</Typography>
+            <Typography color="text.secondary" sx={{ mt: 0.75 }}>Pick where you&apos;re working for this session.</Typography>
+          </Box>
+
+          <Box sx={{ p: 1.5, border: "1px solid", borderColor: "divider", borderRadius: 2, mb: 1.5, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2 }}>
+            <Box><Typography variant="caption" color="text.secondary">Signed in as</Typography><Typography variant="body2" sx={{ fontWeight: 600 }}>{me?.email ?? user?.email ?? ""}</Typography></Box>
+            <Button size="small" variant="outlined" onClick={() => void handleLogout()}>Sign out</Button>
+          </Box>
+          <Alert severity="info" sx={{ mb: 2.5 }}>Your workspace data is scoped to the branch you choose. You can switch branches from the header at any time.</Alert>
+
+          <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+            <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.75 }}>Organization *</Typography>
+            <OutlinedInput
+              value={organizationName}
+              readOnly
+              inputProps={{ "aria-label": "Organization", readOnly: true }}
+              startAdornment={<InputAdornment position="start"><MdBusiness size={17} /></InputAdornment>}
+              sx={{ bgcolor: "action.hover" }}
+            />
+          </FormControl>
+          <FormControl fullWidth size="small" sx={{ mb: 2.5 }} disabled={!organizationId || branchesLoading || Boolean(branchesError) || branches.length === 0}>
+            <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.75 }}>Branch *</Typography>
+            {branchesError ? (
+              <Alert severity="error" action={<Button color="inherit" size="small" onClick={() => void refetchBranches()}>Retry</Button>}>Branches could not be loaded.</Alert>
+            ) : branchesLoading ? (
+              <Box sx={{ minHeight: 40, display: "flex", alignItems: "center", gap: 1, color: "text.secondary" }}><CircularProgress size={18} />Loading branches…</Box>
+            ) : branches.length === 0 ? (
+              <Alert severity="info">No accessible branches are available for this organization.</Alert>
+            ) : (
+              <Select displayEmpty value={pendingBranchId} onChange={(event) => setPendingBranchId(event.target.value)}>
+                <MenuItem value="" disabled>Select branch</MenuItem>
+                {branches.map((branch) => <MenuItem key={branch.id} value={branch.id}>{branch.name}</MenuItem>)}
+              </Select>
+            )}
+          </FormControl>
+          <Button fullWidth variant="contained" size="large" disabled={!canContinue} onClick={() => {
+            setCompany({ id: organizationId, name: organizationName });
+            selectBranch(pendingBranchId);
+          }}>Continue</Button>
+        </Paper>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "background.default" }}>
@@ -703,6 +781,7 @@ export default function DashboardLayout() {
 
       {/* Global Command Palette */}
       <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
+
     </Box>
   );
 }

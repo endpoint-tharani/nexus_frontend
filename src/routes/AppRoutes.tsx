@@ -19,9 +19,7 @@ const AcceptInvite = lazy(() => import("../pages/auth/AcceptInvite"));
 const CreateCompany = lazy(() => import("../pages/auth/CreateCompany"));
 
 const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
-const Organization = lazy(() => import("../pages/dashboard/Organization"));
-const Branches = lazy(() => import("../pages/dashboard/Branches"));
-const Departments = lazy(() => import("../pages/dashboard/Departments"));
+const OrganizationManager = lazy(() => import("../pages/dashboard/OrganizationManager"));
 const Profile = lazy(() => import("../pages/dashboard/Profile"));
 const Sessions = lazy(() => import("../pages/dashboard/Sessions"));
 const NotFound = lazy(() => import("../pages/NotFound"));
@@ -66,9 +64,10 @@ export default function AppRoutes() {
               }
             >
               <Route index element={<Dashboard />} />
-              <Route path="organization" element={<RoleGuard><Organization /></RoleGuard>} />
-              <Route path="branches" element={<RoleGuard><Branches /></RoleGuard>} />
-              <Route path="departments" element={<RoleGuard><Departments /></RoleGuard>} />
+              <Route path="organization-manager" element={<RoleGuard><OrganizationManager /></RoleGuard>} />
+              <Route path="organization" element={<Navigate to="/dashboard/organization-manager" replace />} />
+              <Route path="branches" element={<Navigate to="/dashboard/organization-manager?tab=branches" replace />} />
+              <Route path="departments" element={<Navigate to="/dashboard/organization-manager?tab=departments" replace />} />
               <Route path="company" element={<Navigate to="/dashboard/organization" replace />} />
               <Route path="profile" element={<Profile />} />
               <Route path="sessions" element={<Sessions />} />
