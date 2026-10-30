@@ -194,20 +194,32 @@ export default function ProfileMenu({
 
         {items.map((item) => {
           const Icon = item.icon;
+          const isOrganizationManagerItem = item.label.startsWith("Organization Manager · ");
+          const isFirstOrganizationManagerItem = isOrganizationManagerItem &&
+            !items.slice(0, items.indexOf(item)).some((entry) => entry.label.startsWith("Organization Manager · "));
           return (
-            <MenuItem
-              key={item.path}
-              onClick={() => {
-                handleClose();
-                navigate(item.path);
-              }}
-              sx={{ py: 1.25 }}
-            >
-              <ListItemIcon>
-                <Icon size={18} />
-              </ListItemIcon>
-              <ListItemText primary={item.label} />
-            </MenuItem>
+            <Box key={item.path}>
+              {isFirstOrganizationManagerItem && (
+                <>
+                  <Divider />
+                  <Typography variant="overline" color="text.secondary" sx={{ display: "block", px: 2, pt: 1.25, lineHeight: 2 }}>
+                    Organization Manager
+                  </Typography>
+                </>
+              )}
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  navigate(item.path);
+                }}
+                sx={{ py: 1.25 }}
+              >
+                <ListItemIcon>
+                  <Icon size={18} />
+                </ListItemIcon>
+                <ListItemText primary={isOrganizationManagerItem ? item.label.split(" · ").slice(1).join(" · ") : item.label} />
+              </MenuItem>
+            </Box>
           );
         })}
 

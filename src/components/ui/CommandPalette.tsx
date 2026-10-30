@@ -29,9 +29,7 @@ interface NavItem {
 
 const ROUTE_META: Record<string, { description: string; keywords: string[] }> = {
   "/dashboard": { description: "Organization overview", keywords: ["home", "overview"] },
-  "/dashboard/organization": { description: "Organization profile and details", keywords: ["organization", "org", "profile"] },
-  "/dashboard/branches": { description: "Manage organization branches", keywords: ["branch", "location"] },
-  "/dashboard/departments": { description: "Manage branch departments", keywords: ["department", "branch"] },
+  "/dashboard/organization-manager": { description: "Manage organization, branches, and departments", keywords: ["organization", "org", "branch", "department", "manager"] },
   "/dashboard/profile": { description: "Your profile settings", keywords: ["profile", "account", "me"] },
   "/dashboard/sessions": { description: "Your active login sessions", keywords: ["sessions", "devices", "security"] },
 };
