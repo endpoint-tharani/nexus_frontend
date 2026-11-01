@@ -5,11 +5,12 @@ import {
   IconButton,
   InputAdornment,
   Paper,
+  Chip,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import { MdAdd, MdDelete, MdEdit, MdSearch } from "react-icons/md";
+import { MdAdd, MdApartment, MdDelete, MdEdit, MdLocationOn, MdSearch } from "react-icons/md";
 import type { ColumnDef } from "@tanstack/react-table";
 import toast from "react-hot-toast";
 
@@ -193,19 +194,21 @@ export default function Departments() {
         sx={{
           display: "flex",
           gap: 1.5,
-          alignItems: "center",
+          alignItems: { xs: "stretch", sm: "center" },
+          justifyContent: "space-between",
           flexWrap: "wrap",
           p: { xs: 1.5, sm: 2 },
           mb: 2,
-          borderRadius: 2,
+          borderRadius: 2.5,
+          bgcolor: "background.paper",
         }}
       >
-0        <TextField
+        <TextField
           placeholder="Search departments..."
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           size="small"
-          sx={{ width: { xs: "100%", sm: 320 } }}
+          sx={{ width: { xs: "100%", sm: 340 } }}
           slotProps={{
             htmlInput: { "aria-label": "Search departments" },
             input: {
@@ -215,6 +218,26 @@ export default function Departments() {
             },
           }}
         />
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center", minHeight: 40, minWidth: 0 }}>
+          {selectedBranchId ? (
+            <Chip
+              icon={<MdLocationOn size={17} />}
+              label={branches.find((branch) => branch.id === selectedBranchId)?.name ?? "Selected branch"}
+              size="small"
+              variant="outlined"
+              color="primary"
+              sx={{ maxWidth: { xs: "100%", sm: 220 }, "& .MuiChip-label": { overflow: "hidden", textOverflow: "ellipsis" } }}
+            />
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              Choose a branch to view its departments
+            </Typography>
+          )}
+          <MdApartment size={19} />
+          <Typography variant="body2" color="text.secondary" sx={{ whiteSpace: "nowrap" }}>
+            <strong>{filtered.length}</strong> {filtered.length === 1 ? "department" : "departments"}
+          </Typography>
+        </Box>
       </Paper>
 
       <DataTable
@@ -223,9 +246,11 @@ export default function Departments() {
         loading={isLoading}
         error={isError ? "Failed to load departments." : null}
         onRetry={() => refetch()}
-        emptyTitle={selectedBranchId ? "No departments in this branch" : "No branches available"}
+        emptyTitle={search ? "No matching departments" : selectedBranchId ? "No departments in this branch" : "No branches available"}
         emptyDescription={
-          canCreate && selectedBranchId
+          search
+            ? "Try a different department name or description."
+            : canCreate && selectedBranchId
             ? "Create the first department for this branch."
             : "Departments are organized under a branch."
         }

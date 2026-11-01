@@ -1,12 +1,23 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Button, CircularProgress, IconButton, InputAdornment, TextField, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Collapse,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Paper,
+  Typography,
+} from "@mui/material";
 import VisibilityOutlined from "@mui/icons-material/VisibilityOutlined";
 import VisibilityOffOutlined from "@mui/icons-material/VisibilityOffOutlined";
 import LockOutlined from "@mui/icons-material/LockOutlined";
 import CheckCircleOutlined from "@mui/icons-material/CheckCircleOutlined";
 import RadioButtonUnchecked from "@mui/icons-material/RadioButtonUnchecked";
+import LockResetOutlined from "@mui/icons-material/LockResetOutlined";
 import toast from "react-hot-toast";
 
 import { SectionCard } from "../ui";
@@ -20,6 +31,7 @@ type PwField = "currentPassword" | "newPassword" | "confirmPassword";
 export default function PasswordCard() {
   const changeMutation = useChangePassword();
   const loading = changeMutation.isPending;
+  const [editing, setEditing] = useState(false);
 
   const [visible, setVisible] = useState<Record<PwField, boolean>>({
     currentPassword: false,
@@ -85,6 +97,12 @@ export default function PasswordCard() {
         onSuccess: () => {
           toast.success("Password updated successfully");
           reset();
+          setVisible({
+            currentPassword: false,
+            newPassword: false,
+            confirmPassword: false,
+          });
+          setEditing(false);
         },
         onError: (error) => toast.error(getErrorMessage(error)),
       }
@@ -102,18 +120,49 @@ export default function PasswordCard() {
 
   return (
     <SectionCard
-      title="Password Credentials"
-      subtitle="Update your sign-in password regularly to maintain workspace safety."
-      sx={{ height: "100%" }}
+      title="Password"
+      subtitle="Keep your account secure by using a password only you know."
+      actions={
+        !editing ? (
+          <Button
+            variant="outlined"
+            startIcon={<LockResetOutlined />}
+            onClick={() => setEditing(true)}
+            sx={{ textTransform: "none", fontWeight: 600, whiteSpace: "nowrap" }}
+          >
+            Change password
+          </Button>
+        ) : undefined
+      }
+      sx={{ maxWidth: 640, borderRadius: 3 }}
     >
-      <Box
-        component="form"
-        onSubmit={handleSubmit(onSubmit)}
-        noValidate
-        sx={{ display: "flex", flexDirection: "column", gap: 2.5, mt: 1 }}
-      >
+      {!editing && (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Box
+            sx={{
+              display: "flex",
+              p: 1,
+              borderRadius: 2,
+              color: "text.secondary",
+              bgcolor: "action.hover",
+            }}
+          >
+            <LockOutlined />
+          </Box>
+          <Typography variant="body2" color="text.secondary">
+            Your password is private. Change it whenever you need to.
+          </Typography>
+        </Box>
+      )}
+      <Collapse in={editing} unmountOnExit>
+        <Box
+          component="form"
+          onSubmit={handleSubmit(onSubmit)}
+          noValidate
+          sx={{ display: "flex", flexDirection: "column", gap: 2, maxWidth: 520 }}
+        >
         <TextField
-          label="Current Password"
+          label="Current password"
           type={visible.currentPassword ? "text" : "password"}
           fullWidth
           autoComplete="current-password"
@@ -124,17 +173,10 @@ export default function PasswordCard() {
           slotProps={{
             input: visibilityAdornment("currentPassword", "current password"),
           }}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              height: "52px",
-              borderRadius: "10px",
-              "& fieldset": { borderColor: "#E5E7EB" },
-            },
-          }}
         />
 
         <TextField
-          label="New Password"
+          label="New password"
           type={visible.newPassword ? "text" : "password"}
           fullWidth
           autoComplete="new-password"
@@ -145,17 +187,10 @@ export default function PasswordCard() {
           slotProps={{
             input: visibilityAdornment("newPassword", "new password"),
           }}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              height: "52px",
-              borderRadius: "10px",
-              "& fieldset": { borderColor: "#E5E7EB" },
-            },
-          }}
         />
 
         <TextField
-          label="Confirm New Password"
+          label="Confirm new password"
           type={visible.confirmPassword ? "text" : "password"}
           fullWidth
           autoComplete="new-password"
@@ -165,13 +200,6 @@ export default function PasswordCard() {
           helperText={errors.confirmPassword?.message}
           slotProps={{
             input: visibilityAdornment("confirmPassword", "password confirmation"),
-          }}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              height: "52px",
-              borderRadius: "10px",
-              "& fieldset": { borderColor: "#E5E7EB" },
-            },
           }}
         />
 
@@ -185,17 +213,8 @@ export default function PasswordCard() {
               bgcolor: "#F8FAFC",
             }}
           >
-            <Typography
-              variant="caption"
-              sx={{
-                display: "block",
-                fontWeight: 600,
-                color: "#475569",
-                mb: 1,
-                fontSize: "12px",
-              }}
-            >
-              Password strength checklist:
+            <Typography variant="caption" sx={{ display: "block", fontWeight: 600, mb: 1 }}>
+              Your new password must include:
             </Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
               {rules.map((rule, idx) => (
@@ -221,26 +240,34 @@ export default function PasswordCard() {
           </Paper>
         )}
 
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, mt: 0.5 }}>
+          <Button
+            type="button"
+            disabled={loading}
+            onClick={() => {
+              reset();
+              setVisible({
+                currentPassword: false,
+                newPassword: false,
+                confirmPassword: false,
+              });
+              setEditing(false);
+            }}
+            sx={{ textTransform: "none" }}
+          >
+            Cancel
+          </Button>
           <Button
             type="submit"
             variant="contained"
             disabled={loading || !isDirty}
-            sx={{
-              height: "44px",
-              borderRadius: "8px",
-              textTransform: "none",
-              fontWeight: 600,
-              bgcolor: "#2563EB",
-              px: 3,
-              boxShadow: "none",
-              "&:hover": { bgcolor: "#1D4ED8", boxShadow: "none" },
-            }}
+            sx={{ textTransform: "none", fontWeight: 600, minWidth: 150 }}
           >
-            {loading ? <CircularProgress size={20} color="inherit" /> : "Update Password"}
+            {loading ? <CircularProgress size={20} color="inherit" /> : "Update password"}
           </Button>
         </Box>
-      </Box>
+        </Box>
+      </Collapse>
     </SectionCard>
   );
 }

@@ -19,6 +19,7 @@ const AcceptInvite = lazy(() => import("../pages/auth/AcceptInvite"));
 const CreateCompany = lazy(() => import("../pages/auth/CreateCompany"));
 
 const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
+const Students = lazy(() => import("../pages/dashboard/Students"));
 const OrganizationManager = lazy(() => import("../pages/dashboard/OrganizationManager"));
 const Profile = lazy(() => import("../pages/dashboard/Profile"));
 const Sessions = lazy(() => import("../pages/dashboard/Sessions"));
@@ -64,6 +65,7 @@ export default function AppRoutes() {
               }
             >
               <Route index element={<Dashboard />} />
+              <Route path="students" element={<RoleGuard><Students /></RoleGuard>} />
               <Route path="organization-manager" element={<RoleGuard><OrganizationManager /></RoleGuard>} />
               <Route path="organization" element={<Navigate to="/dashboard/organization-manager" replace />} />
               <Route path="branches" element={<Navigate to="/dashboard/organization-manager?tab=branches" replace />} />

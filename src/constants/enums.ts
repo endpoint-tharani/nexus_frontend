@@ -258,6 +258,7 @@ export const TAX_SECTION_OPTIONS = toOptions(
 export const CompanyRole = {
   OWNER: "OWNER",
   ADMIN: "ADMIN",
+  COMPANY_ADMIN: "COMPANY_ADMIN",
   BRANCH_ADMIN: "BRANCH_ADMIN",
   DEPARTMENT_ADMIN: "DEPARTMENT_ADMIN",
   HR: "HR",
@@ -269,6 +270,7 @@ export type CompanyRole = (typeof CompanyRole)[keyof typeof CompanyRole];
 export const COMPANY_ROLE_LABELS: Record<CompanyRole, string> = {
   OWNER: "Owner",
   ADMIN: "Administrator",
+  COMPANY_ADMIN: "Company administrator",
   BRANCH_ADMIN: "Branch administrator",
   DEPARTMENT_ADMIN: "Department administrator",
   HR: "HR Manager",
@@ -283,6 +285,7 @@ export const COMPANY_ROLE_COLORS: Record<
 > = {
   OWNER: "primary",
   ADMIN: "info",
+  COMPANY_ADMIN: "info",
   BRANCH_ADMIN: "secondary",
   DEPARTMENT_ADMIN: "secondary",
   HR: "secondary",
