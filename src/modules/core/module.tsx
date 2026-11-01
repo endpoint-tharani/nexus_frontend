@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { MdAccountTree, MdBusiness, MdDashboard, MdDevices, MdPerson } from "react-icons/md";
+import { MdAccountTree, MdBusiness, MdDashboard, MdDevices, MdPerson, MdSchool } from "react-icons/md";
 
 import { CompanyRole } from "../../constants/enums";
 import { useActiveBranch, useBranches } from "../../hooks/branch";
@@ -13,14 +13,32 @@ const Branches = lazy(() => import("../../pages/dashboard/Branches"));
 const Departments = lazy(() => import("../../pages/dashboard/Departments"));
 const Profile = lazy(() => import("../../pages/dashboard/Profile"));
 const Sessions = lazy(() => import("../../pages/dashboard/Sessions"));
+const Students = lazy(() => import("../../pages/dashboard/Students"));
 
-const { OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, HR, EMPLOYEE, SUPER_ADMIN } =
-  CompanyRole;
+const {
+  OWNER,
+  ADMIN,
+  COMPANY_ADMIN,
+  BRANCH_ADMIN,
+  DEPARTMENT_ADMIN,
+  HR,
+  EMPLOYEE,
+  SUPER_ADMIN,
+} = CompanyRole;
 const ALL = [OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, HR, EMPLOYEE, SUPER_ADMIN] as const;
 const ORG_ADMINS = [OWNER, ADMIN, SUPER_ADMIN] as const;
 const BRANCH_ADMINS = [OWNER, ADMIN, BRANCH_ADMIN, SUPER_ADMIN] as const;
 const DEPARTMENT_ADMINS = [OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, SUPER_ADMIN] as const;
 const ORG_MANAGERS = [OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, SUPER_ADMIN] as const;
+const STUDENT_MANAGERS = [
+  OWNER,
+  ADMIN,
+  COMPANY_ADMIN,
+  BRANCH_ADMIN,
+  DEPARTMENT_ADMIN,
+  HR,
+  SUPER_ADMIN,
+] as const;
 
 function BranchCountWidget() {
   const { data = [], isLoading } = useBranches();
@@ -60,7 +78,10 @@ export const coreModule: ModuleDefinition = {
   nav: [
     {
       label: "",
-      items: [{ label: "Dashboard", path: "/dashboard", icon: MdDashboard, roles: ALL }],
+      items: [
+        { label: "Dashboard", path: "/dashboard", icon: MdDashboard, roles: ALL },
+        { label: "Students", path: "/dashboard/students", icon: MdSchool, roles: STUDENT_MANAGERS },
+      ],
     },
   ],
   accountNav: [
@@ -73,6 +94,7 @@ export const coreModule: ModuleDefinition = {
     { path: "organization", component: Organization, roles: ORG_ADMINS },
     { path: "branches", component: Branches, roles: BRANCH_ADMINS },
     { path: "departments", component: Departments, roles: DEPARTMENT_ADMINS },
+    { path: "students", component: Students, roles: STUDENT_MANAGERS },
     { path: "profile", component: Profile, roles: ALL },
     { path: "sessions", component: Sessions, roles: ALL },
   ],

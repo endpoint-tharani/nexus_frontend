@@ -8,17 +8,19 @@ import { useCompany } from "./useCompany";
 const STAFF_ROLES: readonly CompanyRole[] = [
   CompanyRole.OWNER,
   CompanyRole.ADMIN,
+  CompanyRole.COMPANY_ADMIN,
   CompanyRole.HR,
 ];
 
 const ROLE_RANK: Record<CompanyRole, number> = {
   OWNER: 0,
   ADMIN: 1,
-  BRANCH_ADMIN: 2,
-  DEPARTMENT_ADMIN: 3,
-  HR: 4,
-  EMPLOYEE: 5,
-  SUPER_ADMIN: 6,
+  COMPANY_ADMIN: 2,
+  BRANCH_ADMIN: 3,
+  DEPARTMENT_ADMIN: 4,
+  HR: 5,
+  EMPLOYEE: 6,
+  SUPER_ADMIN: 7,
 };
 
 const toStaff = (

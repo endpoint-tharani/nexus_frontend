@@ -15,6 +15,7 @@ import type {
   RegularizationStatus,
   TaxRegime,
 } from "./enums";
+import type { StudentListParams } from "../types/student.types";
 
 type EmployeeListFilters = {
   page?: number;
@@ -107,6 +108,13 @@ export const queryKeys = {
       ["employees", companyId, "list", filters ?? {}] as const,
     detail: (companyId: string, id: string) =>
       ["employees", companyId, "detail", id] as const,
+  },
+
+  // --- Students (company-scoped) ---
+  students: {
+    all: (companyId: string) => ["students", companyId] as const,
+    list: (companyId: string, filters?: StudentListParams) =>
+      ["students", companyId, "list", filters ?? {}] as const,
   },
 
   // --- Payroll (company-scoped) ---
