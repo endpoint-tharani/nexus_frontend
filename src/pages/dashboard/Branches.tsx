@@ -7,7 +7,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  InputAdornment,
   IconButton,
+  Paper,
   Stack,
   TextField,
   Tooltip,
@@ -15,7 +17,7 @@ import {
 } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
-import { MdAdd, MdDelete, MdEdit } from "react-icons/md";
+import { MdAdd, MdDelete, MdEdit, MdLocationCity, MdSearch } from "react-icons/md";
 import toast from "react-hot-toast";
 
 import { createBranch, deleteBranch, updateBranch } from "../../api/branch.api";
@@ -42,10 +44,19 @@ export default function Branches() {
   const [deleteTarget, setDeleteTarget] = useState<Branch | null>(null);
   const [form, setForm] = useState<BranchPayload>(emptyForm);
   const [formError, setFormError] = useState("");
+  const [search, setSearch] = useState("");
   const createRequested = useBranchStore((state) => state.createRequested);
   const clearBranchCreateRequest = useBranchStore((state) => state.clearBranchCreateRequest);
   const activeForm = createRequested ? emptyForm : form;
   const activeEditing = createRequested ? null : editing;
+  const filteredBranches = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    if (!term) return branches;
+    return branches.filter((branch) =>
+      [branch.name, branch.code, branch.city, branch.state]
+        .some((value) => value?.toLowerCase().includes(term)),
+    );
+  }, [branches, search]);
 
   const updateForm = (update: (current: BranchPayload) => BranchPayload) => {
     if (createRequested) {
@@ -179,14 +190,53 @@ export default function Branches() {
           ) : undefined
         }
       />
+      <Paper
+        variant="outlined"
+        sx={{
+          display: "flex",
+          alignItems: { xs: "stretch", sm: "center" },
+          justifyContent: "space-between",
+          gap: 1.5,
+          flexWrap: "wrap",
+          p: { xs: 1.5, sm: 2 },
+          mb: 2,
+          borderRadius: 2.5,
+          bgcolor: "background.paper",
+        }}
+      >
+        <TextField
+          placeholder="Search branches..."
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          size="small"
+          sx={{ width: { xs: "100%", sm: 340 } }}
+          slotProps={{
+            htmlInput: { "aria-label": "Search branches" },
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <MdSearch size={18} />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+          <MdLocationCity size={19} color="currentColor" />
+          <Typography variant="body2" color="text.secondary">
+            <strong>{filteredBranches.length}</strong>{" "}
+            {filteredBranches.length === 1 ? "branch" : "branches"}
+          </Typography>
+        </Box>
+      </Paper>
       <DataTable
         columns={columns}
-        data={branches}
+        data={filteredBranches}
         loading={isLoading}
         error={isError ? "Unable to load branches." : null}
         onRetry={() => refetch()}
-        emptyTitle="No branches yet"
-        emptyDescription={canManage ? "Create a branch to start organizing departments." : "No branches are assigned to your account."}
+        emptyTitle={search ? "No matching branches" : "No branches yet"}
+        emptyDescription={search ? "Try a different name, code, or location." : canManage ? "Create a branch to start organizing departments." : "No branches are assigned to your account."}
         ariaLabel="Organization branches"
         rowActions={
           canManage
