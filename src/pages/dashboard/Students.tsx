@@ -129,23 +129,6 @@ function StudentsRoster({
   );
 
   const studentsQuery = useStudents(filters, { enabled: Boolean(selectedBranchId) });
-  const totalQuery = useStudents(
-    { branchId: selectedBranchId || undefined, page: 1, limit: 1 },
-    { enabled: Boolean(selectedBranchId) }
-  );
-  const activeQuery = useStudents(
-    { branchId: selectedBranchId || undefined, status: "ACTIVE", page: 1, limit: 1 },
-    { enabled: Boolean(selectedBranchId) }
-  );
-  const pendingQuery = useStudents(
-    {
-      branchId: selectedBranchId || undefined,
-      status: "PENDING_APPROVAL",
-      page: 1,
-      limit: 1,
-    },
-    { enabled: Boolean(selectedBranchId) }
-  );
   const {
     data: departments = [],
     isLoading: departmentsLoading,
@@ -160,6 +143,10 @@ function StudentsRoster({
   const addDepartment = useAddStudentDepartment();
   const setStudentStatus = useSetStudentStatus();
   const students = studentsQuery.data?.items ?? [];
+  const activeOnPage = students.filter((student) => student.status === "ACTIVE").length;
+  const pendingOnPage = students.filter(
+    (student) => student.status === "PENDING_APPROVAL"
+  ).length;
 
   const columns = useMemo<ColumnDef<Student>[]>(
     () => [
@@ -329,28 +316,28 @@ function StudentsRoster({
           <Grid container spacing={2}>
             <Grid size={{ xs: 6, sm: 3 }}>
               <StatCard
-                label="Total students"
-                value={formatNumber(totalQuery.data?.total ?? 0, "0")}
+                label="Matching students"
+                value={formatNumber(studentsQuery.data?.total ?? 0, "0")}
                 icon={<MdGroups />}
-                loading={totalQuery.isLoading}
+                loading={studentsQuery.isLoading}
               />
             </Grid>
             <Grid size={{ xs: 6, sm: 3 }}>
               <StatCard
-                label="Active students"
-                value={formatNumber(activeQuery.data?.total ?? 0, "0")}
+                label="Active on this page"
+                value={formatNumber(activeOnPage, "0")}
                 icon={<MdSchool />}
                 color="success"
-                loading={activeQuery.isLoading}
+                loading={studentsQuery.isLoading}
               />
             </Grid>
             <Grid size={{ xs: 6, sm: 3 }}>
               <StatCard
-                label="Pending approval"
-                value={formatNumber(pendingQuery.data?.total ?? 0, "0")}
+                label="Pending on this page"
+                value={formatNumber(pendingOnPage, "0")}
                 icon={<MdGroups />}
                 color="warning"
-                loading={pendingQuery.isLoading}
+                loading={studentsQuery.isLoading}
               />
             </Grid>
             <Grid size={{ xs: 6, sm: 3 }}>
@@ -363,23 +350,6 @@ function StudentsRoster({
               />
             </Grid>
           </Grid>
-
-          {(totalQuery.isError || activeQuery.isError || pendingQuery.isError) && (
-            <Alert severity="error">
-              Student summary could not be loaded.{" "}
-              <Button
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  void totalQuery.refetch();
-                  void activeQuery.refetch();
-                  void pendingQuery.refetch();
-                }}
-              >
-                Retry
-              </Button>
-            </Alert>
-          )}
 
           <Stack
             direction={{ xs: "column", md: "row" }}
