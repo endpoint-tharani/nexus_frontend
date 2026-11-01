@@ -25,10 +25,10 @@ export const formComponents: ThemeOptions["components"] = {
           borderWidth: 1,
         },
         "&.Mui-focused": {
-          boxShadow: `0 0 0 3px ${theme.palette.primary.main}66`,
+          boxShadow: `0 0 0 2px ${theme.palette.primary.main}26`,
         },
         "&.Mui-error.Mui-focused": {
-          boxShadow: `0 0 0 3px ${theme.palette.error.light}55`,
+          boxShadow: `0 0 0 2px ${theme.palette.error.light}26`,
         },
       }),
     },
@@ -38,6 +38,12 @@ export const formComponents: ThemeOptions["components"] = {
       root: ({ theme }) => ({
         color: theme.palette.text.secondary,
         "&.Mui-focused": { color: theme.palette.primary.main },
+        "&.MuiInputLabel-outlined.MuiInputLabel-shrink": {
+          zIndex: 1,
+          px: 0.5,
+          borderRadius: 0.5,
+          backgroundColor: theme.palette.background.paper,
+        },
       }),
     },
   },
