@@ -1,4 +1,4 @@
-import api from "./axios";
+import api from "../../../api/axios";
 import type {
   CreateStudentPayload,
   StudentDepartmentResponse,
@@ -7,7 +7,7 @@ import type {
   StudentResponse,
   StudentStatus,
   StudentStatusResponse,
-} from "../types";
+} from "../../../types";
 
 export const getStudents = (
   companyId: string,

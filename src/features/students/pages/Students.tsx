@@ -27,27 +27,27 @@ import {
 } from "react-icons/md";
 import toast from "react-hot-toast";
 
-import { DataTable, SearchInput, StatCard } from "../../components/ui";
-import StudentFormDialog from "../../components/student/StudentFormDialog";
-import { useActiveBranch } from "../../hooks/branch";
-import { useDepartments } from "../../hooks/department";
+import { DataTable, SearchInput, StatCard } from "../../../components/ui";
+import StudentFormDialog from "../components/StudentFormDialog";
+import { useActiveBranch } from "../../../hooks/branch";
+import { useDepartments } from "../../../hooks/department";
 import {
   useAddStudentDepartment,
   useCreateStudent,
   useSetStudentStatus,
   useStudents,
-} from "../../hooks/student";
-import { useCurrentRole } from "../../hooks/user";
-import { CompanyRole } from "../../constants/enums";
+} from "../hooks";
+import { useCurrentRole } from "../../../hooks/user";
+import { CompanyRole } from "../../../constants/enums";
 import type {
   CreateStudentPayload,
   Student,
   StudentListParams,
   StudentStatus,
-} from "../../types";
-import type { StudentFormValues } from "../../schemas/student.schema";
-import { formatDate, formatNumber } from "../../utils/format";
-import { getErrorMessage } from "../../utils";
+} from "../../../types";
+import type { StudentFormValues } from "../schemas/student.schema";
+import { formatDate, formatNumber } from "../../../utils/format";
+import { getErrorMessage } from "../../../utils";
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100];
 

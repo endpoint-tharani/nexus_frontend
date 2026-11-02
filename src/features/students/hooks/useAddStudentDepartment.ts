@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addStudentDepartment } from "../../api/student.api";
-import { queryKeys } from "../../constants/queryKeys";
-import type { StudentDepartmentMembership } from "../../types";
-import { requireCompanyId, useCompanyId } from "../shared/useCompanyId";
+import { addStudentDepartment } from "../api/student.api";
+import { queryKeys } from "../../../constants/queryKeys";
+import type { StudentDepartmentMembership } from "../../../types";
+import { requireCompanyId, useCompanyId } from "../../../hooks/shared/useCompanyId";
 
 interface AddStudentDepartmentArgs {
   studentId: string;

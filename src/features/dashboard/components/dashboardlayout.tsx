@@ -40,21 +40,21 @@ import toast from "react-hot-toast";
 
 import ProfileMenu from "./profile/ProfileMenu";
 import type { ProfileMenuItem } from "./profile/ProfileMenu";
-import type { ModuleMenuItem } from "../../modules/types";
+import type { ModuleMenuItem } from "../../../modules/types";
 import PageContainer from "./PageContainer";
-import { CommandPalette } from "../ui";
-import { Logo, ThemeSwitcher } from "../common";
-import { useAuthStore } from "../../store/auth.store";
-import { useCompanyStore } from "../../store/company.store";
-import { useMe } from "../../hooks/user";
-import { useCompany } from "../../hooks/company";
-import { useActiveBranch } from "../../hooks/branch";
-import { useBranchStore } from "../../store/branch.store";
-import { CompanyRole } from "../../constants/enums";
-import { useSidebar, usePageTitle } from "../../core/navigation";
-import { logout as logoutApi } from "../../api/auth.api";
-import { clearAppSession } from "../../utils/logout";
-import { layout } from "../../theme";
+import { CommandPalette } from "../../../components/ui";
+import { Logo, ThemeSwitcher } from "../../../components/common";
+import { useAuthStore } from "../../../store/auth.store";
+import { useCompanyStore } from "../../../store/company.store";
+import { useMe } from "../../../hooks/user";
+import { useCompany } from "../../../hooks/company";
+import { useActiveBranch } from "../../../hooks/branch";
+import { useBranchStore } from "../../../store/branch.store";
+import { CompanyRole } from "../../../constants/enums";
+import { useSidebar, usePageTitle } from "../../../core/navigation";
+import { logout as logoutApi } from "../../../api/auth.api";
+import { clearAppSession } from "../../../utils/logout";
+import { layout } from "../../../theme";
 
 const { drawerFull: DRAWER_FULL, drawerMini: DRAWER_MINI, topbarHeight: TOPBAR_H } = layout;
 

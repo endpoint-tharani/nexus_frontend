@@ -15,7 +15,7 @@ import type {
   RegularizationStatus,
   TaxRegime,
 } from "./enums";
-import type { StudentListParams } from "../types/student.types";
+import type { StudentListParams } from "../features/students/types/student.types";
 
 type EmployeeListFilters = {
   page?: number;

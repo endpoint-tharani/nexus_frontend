@@ -15,4 +15,4 @@ export type * from "./subscription.types";
 export type * from "./branch.types";
 export type * from "./shift.types";
 export type * from "./holiday.types";
-export type * from "./student.types";
+export type * from "../features/students/types/student.types";

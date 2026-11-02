@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { setStudentStatus } from "../../api/student.api";
-import { queryKeys } from "../../constants/queryKeys";
-import type { Student, StudentStatus } from "../../types";
-import { requireCompanyId, useCompanyId } from "../shared/useCompanyId";
+import { setStudentStatus } from "../api/student.api";
+import { queryKeys } from "../../../constants/queryKeys";
+import type { Student, StudentStatus } from "../../../types";
+import { requireCompanyId, useCompanyId } from "../../../hooks/shared/useCompanyId";
 
 interface SetStudentStatusArgs {
   studentId: string;

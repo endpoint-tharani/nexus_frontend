@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Box, Skeleton } from "@mui/material";
-import { SectionCard, EmptyState, ErrorState } from "../ui";
+import { SectionCard, EmptyState, ErrorState } from "../../../components/ui";
 
 export interface ChartCardProps {
   title: ReactNode;

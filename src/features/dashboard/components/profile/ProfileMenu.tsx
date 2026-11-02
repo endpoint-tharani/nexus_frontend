@@ -14,9 +14,9 @@ import {
 import { MdLogout, MdUnfoldMore } from "react-icons/md";
 import type { IconType } from "react-icons";
 import { useNavigate } from "react-router-dom";
-import { useSubscription } from "../../../core/subscription";
-import { useAuthStore } from "../../../store/auth.store";
-import { CompanyRole } from "../../../constants/enums";
+import { useSubscription } from "../../../../core/subscription";
+import { useAuthStore } from "../../../../store/auth.store";
+import { CompanyRole } from "../../../../constants/enums";
 
 export interface ProfileMenuItem {
   label: string;

@@ -23,13 +23,13 @@ import {
   MoneyText,
   EmptyState,
   ErrorState,
-} from "../ui";
+} from "../../../components/ui";
 import ChartCard from "./ChartCard";
 import { PayNetTrendChart } from "./charts";
-import { useMyDeclaration } from "../../hooks/meTax";
-import { usePayStatement } from "../../hooks/payroll";
-import { TAX_REGIME_LABELS } from "../../constants/enums";
-import { formatFinancialYear, getFinancialYear } from "../../utils/format";
+import { useMyDeclaration } from "../../../hooks/meTax";
+import { usePayStatement } from "../../../hooks/payroll";
+import { TAX_REGIME_LABELS } from "../../../constants/enums";
+import { formatFinancialYear, getFinancialYear } from "../../../utils/format";
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
   return (

@@ -18,9 +18,9 @@ import {
   ListItemText,
   TextField,
 } from "@mui/material";
-import type { Department } from "../../types";
-import { studentSchema } from "../../schemas/student.schema";
-import type { StudentFormValues } from "../../schemas/student.schema";
+import type { Department } from "../../../types";
+import { studentSchema } from "../schemas/student.schema";
+import type { StudentFormValues } from "../schemas/student.schema";
 
 interface StudentFormDialogProps {
   open: boolean;

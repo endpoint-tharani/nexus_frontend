@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { Box } from "@mui/material";
 import type { SxProps, Theme } from "@mui/material/styles";
-import { layout } from "../../theme";
+import { layout } from "../../../theme";
 
 export interface PageContainerProps {
   children: ReactNode;

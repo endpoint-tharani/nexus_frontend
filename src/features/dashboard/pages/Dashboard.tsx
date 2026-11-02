@@ -1,4 +1,4 @@
-import DashboardEngine from "../../components/dashboard/DashboardEngine";
+import DashboardEngine from "../components/DashboardEngine";
 
 // Module-driven dashboard. The widget set is generated from the company's enabled
 // modules ∩ the caller's role (see DashboardEngine / the module registry), so the

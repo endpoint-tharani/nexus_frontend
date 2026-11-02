@@ -7,27 +7,26 @@ import {
   MdCheckCircle,
 } from "react-icons/md";
 import { Link as RouterLink } from "react-router-dom";
-import { useSubscriptionAccess } from "../../core/subscription";
-import { getIconComponent } from "../../utils/iconMap";
-
-import { StatCard, SectionCard } from "../ui";
+import { useSubscriptionAccess } from "../../../core/subscription";
+import { getIconComponent } from "../../../utils/iconMap";
+import { StatCard, SectionCard } from "../../../components/ui";
 import ChartCard from "./ChartCard";
 import {
   DeclarationStatusChart,
   PayrollNetPayTrendChart,
   HeadcountByDepartmentChart,
 } from "./charts";
-import { useEmployees } from "../../hooks/employee";
-import { useSalaryImportHistory } from "../../hooks/payroll";
-import type { PayrollRun } from "../../types";
-import { useTaxSummary } from "../../hooks/tax";
+import { useEmployees } from "../../../hooks/employee";
+import { useSalaryImportHistory } from "../../../hooks/payroll";
+import type { PayrollRun } from "../../../types";
+import { useTaxSummary } from "../../../hooks/tax";
 import {
   formatCompactCurrency,
   formatFinancialYear,
   formatNumber,
   getFinancialYear,
   toNumber,
-} from "../../utils/format";
+} from "../../../utils/format";
 
 const DASHBOARD_EMPLOYEE_SAMPLE = 100;
 

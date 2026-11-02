@@ -18,19 +18,19 @@ import {
   YAxis,
 } from "recharts";
 
-import { MONTHS } from "../../constants/app";
+import { MONTHS } from "../../../constants/app";
 import {
   formatCompactCurrency,
   formatCurrency,
   formatNumber,
   toNumber,
-} from "../../utils/format";
+} from "../../../utils/format";
 import type {
   Employee,
   PayrollRun,
   PayStatementMonth,
   TaxSummary,
-} from "../../types";
+} from "../../../types";
 
 // All chart colors are pulled from the MUI theme palette (never hardcoded hex),
 // so the dashboard stays on-brand and dark-mode-ready.

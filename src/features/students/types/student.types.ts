@@ -1,4 +1,4 @@
-import type { ApiEnvelope } from "./common.types";
+import type { ApiEnvelope } from "../../../types/common.types";
 
 export type StudentStatus =
   | "PENDING_APPROVAL"

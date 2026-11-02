@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createStudent } from "../../api/student.api";
-import { queryKeys } from "../../constants/queryKeys";
-import type { CreateStudentPayload, Student } from "../../types";
-import { requireCompanyId, useCompanyId } from "../shared/useCompanyId";
+import { createStudent } from "../api/student.api";
+import { queryKeys } from "../../../constants/queryKeys";
+import type { CreateStudentPayload, Student } from "../../../types";
+import { requireCompanyId, useCompanyId } from "../../../hooks/shared/useCompanyId";
 
 export const useCreateStudent = () => {
   const companyId = useCompanyId();

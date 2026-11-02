@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import { getStudents } from "../../api/student.api";
-import { queryKeys } from "../../constants/queryKeys";
-import type { StudentListParams, StudentListResult } from "../../types";
-import { useCompanyId } from "../shared/useCompanyId";
-import type { QueryConfig } from "../shared/types";
+import { getStudents } from "../api/student.api";
+import { queryKeys } from "../../../constants/queryKeys";
+import type { StudentListParams, StudentListResult } from "../../../types";
+import { useCompanyId } from "../../../hooks/shared/useCompanyId";
+import type { QueryConfig } from "../../../hooks/shared/types";
 
 export const useStudents = (
   filters: StudentListParams = {},

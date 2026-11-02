@@ -5,10 +5,10 @@ import {
   Tooltip, XAxis, YAxis,
 } from "recharts";
 import { MdGroups, MdSportsMartialArts, MdEventAvailable, MdEmojiEvents } from "react-icons/md";
-import { hasAccess } from "../../constants/navigation";
-import { coreModule } from "../../modules/core/module";
-import { useCurrentRole } from "../../hooks/user";
-import { SectionCard, StatCard } from "../ui";
+import { hasAccess } from "../../../constants/navigation";
+import { coreModule } from "../../../modules/core/module";
+import { useCurrentRole } from "../../../hooks/user";
+import { SectionCard, StatCard } from "../../../components/ui";
 import ChartCard from "./ChartCard";
 
 const attendanceData = [

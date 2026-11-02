@@ -7,13 +7,13 @@ import { useDepartments } from "../../hooks/department";
 import { StatCard } from "../../components/ui";
 import type { ModuleDefinition } from "../types";
 
-const Dashboard = lazy(() => import("../../pages/dashboard/Dashboard"));
+const Dashboard = lazy(() => import("../../features/dashboard/pages/Dashboard"));
 const Organization = lazy(() => import("../../pages/dashboard/Organization"));
 const Branches = lazy(() => import("../../pages/dashboard/Branches"));
 const Departments = lazy(() => import("../../pages/dashboard/Departments"));
 const Profile = lazy(() => import("../../pages/dashboard/Profile"));
 const Sessions = lazy(() => import("../../pages/dashboard/Sessions"));
-const Students = lazy(() => import("../../pages/dashboard/Students"));
+const Students = lazy(() => import("../../features/students/pages/Students"));
 
 const {
   OWNER,

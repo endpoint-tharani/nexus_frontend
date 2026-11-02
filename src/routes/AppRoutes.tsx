@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import type { ReactNode } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import DashboardLayout from "../components/dashboard/dashboardlayout";
+import DashboardLayout from "../features/dashboard/components/dashboardlayout";
 import { ErrorBoundary, LoadingFallback } from "../components/common";
 import RoleGuard from "../components/guards/RoleGuard";
 import { useAuthStore } from "../store/auth.store";
@@ -18,8 +18,8 @@ const AcceptStaffInvite = lazy(() => import("../pages/auth/AcceptStaffInvite"));
 const AcceptInvite = lazy(() => import("../pages/auth/AcceptInvite"));
 const CreateCompany = lazy(() => import("../pages/auth/CreateCompany"));
 
-const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
-const Students = lazy(() => import("../pages/dashboard/Students"));
+const Dashboard = lazy(() => import("../features/dashboard/pages/Dashboard"));
+const Students = lazy(() => import("../features/students/pages/Students"));
 const OrganizationManager = lazy(() => import("../pages/dashboard/OrganizationManager"));
 const Profile = lazy(() => import("../pages/dashboard/Profile"));
 const Sessions = lazy(() => import("../pages/dashboard/Sessions"));
