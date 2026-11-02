@@ -34,6 +34,7 @@ import {
   MdExpandMore,
   MdAdd,
   MdSearch,
+  MdCheck,
 } from "react-icons/md";
 import toast from "react-hot-toast";
 
@@ -323,6 +324,18 @@ export default function DashboardLayout() {
   const canManageBranches =
     role === CompanyRole.OWNER ||
     role === CompanyRole.ADMIN;
+  const currentBranchName = branches.find(
+    (branch) => branch.id === selectedBranchId
+  )?.name;
+  const handleBranchChange = (branchId: string) => {
+    if (branchId === selectedBranchId) return;
+
+    const branch = branches.find((item) => item.id === branchId);
+    if (!branch) return;
+
+    selectBranch(branchId);
+    toast.success(`Switched to ${branch.name}`);
+  };
 
   const drawerContent = (
     <Box sx={{ height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
@@ -561,11 +574,11 @@ export default function DashboardLayout() {
 
       {branches.length > 0 && (
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <FormControl size="small" sx={{ width: { xs: 128, sm: 180, md: 210 } }}>
+          <FormControl size="small" sx={{ width: { xs: 148, sm: 190, md: 210 } }}>
             <Select
               value={selectedBranchId}
               disabled={branches.length < 2}
-              onChange={(event) => selectBranch(event.target.value)}
+              onChange={(event) => handleBranchChange(event.target.value)}
               input={
                 <OutlinedInput
                   startAdornment={
@@ -573,25 +586,64 @@ export default function DashboardLayout() {
                       <MdBusiness size={17} />
                     </InputAdornment>
                   }
-                  sx={{ height: 38, borderRadius: 2, fontSize: "0.8125rem" }}
+                  sx={{ height: 46, borderRadius: 2, fontSize: "0.8125rem" }}
                 />
               }
-              inputProps={{ "aria-label": "Switch branch" }}
-              renderValue={(branchId) =>
-                branches.find((branch) => branch.id === branchId)?.name ?? "Select branch"
-              }
+              inputProps={{
+                "aria-label": `Current branch: ${currentBranchName ?? "Select branch"}. Switch branch`,
+              }}
+              renderValue={(branchId) => {
+                const branchName =
+                  branches.find((branch) => branch.id === branchId)?.name ??
+                  "Select branch";
+                return (
+                  <Box sx={{ display: "flex", flexDirection: "column", minWidth: 0, lineHeight: 1.1 }}>
+                    <Typography
+                      component="span"
+                      sx={{
+                        fontSize: "0.58rem",
+                        lineHeight: 1.2,
+                        fontWeight: 700,
+                        letterSpacing: "0.07em",
+                        color: "primary.main",
+                      }}
+                    >
+                      CURRENT BRANCH
+                    </Typography>
+                    <Typography
+                      component="span"
+                      noWrap
+                      sx={{ fontSize: "0.8rem", lineHeight: 1.35, fontWeight: 600 }}
+                    >
+                      {branchName}
+                    </Typography>
+                  </Box>
+                );
+              }}
               sx={{
                 "& .MuiSelect-select": {
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
-                  py: 0.75,
+                  py: 0.5,
                 },
               }}
             >
               {branches.map((branch) => (
-                <MenuItem key={branch.id} value={branch.id}>
-                  {branch.name}
+                <MenuItem key={branch.id} value={branch.id} selected={branch.id === selectedBranchId}>
+                  <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", gap: 2 }}>
+                    <Typography component="span" variant="body2" noWrap>
+                      {branch.name}
+                    </Typography>
+                    {branch.id === selectedBranchId && (
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, color: "primary.main", flexShrink: 0 }}>
+                        <MdCheck size={16} aria-hidden="true" />
+                        <Typography component="span" variant="caption" sx={{ fontWeight: 600 }}>
+                          Current
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
                 </MenuItem>
               ))}
             </Select>
