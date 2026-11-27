@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { MdAccountTree, MdBusiness, MdDashboard, MdDevices, MdPerson } from "react-icons/md";
+import { MdAccountTree, MdBusiness, MdDashboard, MdDevices, MdPerson, MdSchool, MdMenuBook, MdGroups } from "react-icons/md";
 
 import { CompanyRole } from "../../constants/enums";
 import { useActiveBranch, useBranches } from "../../hooks/branch";
@@ -13,10 +13,18 @@ const Branches = lazy(() => import("../../pages/dashboard/Branches"));
 const Departments = lazy(() => import("../../pages/dashboard/Departments"));
 const Profile = lazy(() => import("../../pages/dashboard/Profile"));
 const Sessions = lazy(() => import("../../pages/dashboard/Sessions"));
+const Instructor = lazy(() => import("../../pages/dashboard/Instructor"));
+const Student = lazy(() => import("../../pages/dashboard/Student"));
+const StudentManagement = lazy(() => import("../../pages/dashboard/StudentManagement"));
+const InstructorManagement = lazy(() => import("../../pages/dashboard/InstructorManagement"));
 
 const { OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, HR, EMPLOYEE, SUPER_ADMIN } =
   CompanyRole;
-const ALL = [OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, HR, EMPLOYEE, SUPER_ADMIN] as const;
+const INSTRUCTOR = CompanyRole.INSTRUCTOR;
+const STUDENT = CompanyRole.STUDENT;
+const STUDENT_MANAGERS = [OWNER, ADMIN, SUPER_ADMIN] as const;
+const INSTRUCTOR_MANAGERS = [OWNER, ADMIN, SUPER_ADMIN] as const;
+const ALL = [OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, HR, EMPLOYEE, SUPER_ADMIN, INSTRUCTOR, STUDENT] as const;
 const ORG_ADMINS = [OWNER, ADMIN, SUPER_ADMIN] as const;
 const BRANCH_ADMINS = [OWNER, ADMIN, BRANCH_ADMIN, SUPER_ADMIN] as const;
 const DEPARTMENT_ADMINS = [OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, SUPER_ADMIN] as const;
@@ -62,6 +70,22 @@ export const coreModule: ModuleDefinition = {
       label: "",
       items: [{ label: "Dashboard", path: "/dashboard", icon: MdDashboard, roles: ALL }],
     },
+    {
+      label: "",
+      items: [{ label: "Instructor", path: "/dashboard/instructor", icon: MdSchool, roles: [INSTRUCTOR] }],
+    },
+    {
+      label: "",
+      items: [{ label: "Instructors", path: "/dashboard/instructors", icon: MdSchool, roles: INSTRUCTOR_MANAGERS }],
+    },
+    {
+      label: "",
+      items: [{ label: "Student", path: "/dashboard/student", icon: MdMenuBook, roles: [STUDENT] }],
+    },
+    {
+      label: "",
+      items: [{ label: "Students", path: "/dashboard/students", icon: MdGroups, roles: STUDENT_MANAGERS }],
+    },
   ],
   accountNav: [
     { label: "Manage Organization", path: "/dashboard/organization-manager", icon: MdBusiness, roles: ORG_MANAGERS },
@@ -75,6 +99,10 @@ export const coreModule: ModuleDefinition = {
     { path: "departments", component: Departments, roles: DEPARTMENT_ADMINS },
     { path: "profile", component: Profile, roles: ALL },
     { path: "sessions", component: Sessions, roles: ALL },
+    { path: "instructor", component: Instructor, roles: [INSTRUCTOR] },
+    { path: "instructors", component: InstructorManagement, roles: INSTRUCTOR_MANAGERS },
+    { path: "student", component: Student, roles: [STUDENT] },
+    { path: "students", component: StudentManagement, roles: STUDENT_MANAGERS },
   ],
   widgets: [
     {

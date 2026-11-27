@@ -185,6 +185,10 @@ export default function Login() {
           actionLabel="Create account"
           actionTo="/register"
         />
+        <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 1 }}>
+          <Link component={RouterLink} to="/student-setup" variant="body2" underline="hover">Set up student account</Link>
+          <Link component={RouterLink} to="/student-signup" variant="body2" underline="hover">Student admission signup</Link>
+        </Box>
       </AuthCard>
     </AuthLayout>
   );

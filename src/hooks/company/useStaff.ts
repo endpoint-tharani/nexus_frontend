@@ -9,6 +9,7 @@ const STAFF_ROLES: readonly CompanyRole[] = [
   CompanyRole.OWNER,
   CompanyRole.ADMIN,
   CompanyRole.HR,
+  CompanyRole.INSTRUCTOR,
 ];
 
 const ROLE_RANK: Record<CompanyRole, number> = {
@@ -19,6 +20,8 @@ const ROLE_RANK: Record<CompanyRole, number> = {
   HR: 4,
   EMPLOYEE: 5,
   SUPER_ADMIN: 6,
+  INSTRUCTOR: 7,
+  STUDENT: 8,
 };
 
 const toStaff = (

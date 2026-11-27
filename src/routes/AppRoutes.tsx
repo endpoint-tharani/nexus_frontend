@@ -9,6 +9,8 @@ import { useAuthStore } from "../store/auth.store";
 
 const Login = lazy(() => import("../pages/auth/Login"));
 const Register = lazy(() => import("../pages/auth/Register"));
+const StudentSignup = lazy(() => import("../pages/auth/StudentSignup"));
+const StudentAccountSetup = lazy(() => import("../pages/auth/StudentAccountSetup"));
 const VerifyEmail = lazy(() => import("../pages/auth/VerifyEmail"));
 const ForgotPassword = lazy(() => import("../pages/auth/ForgotPassword"));
 const ResetPassword = lazy(() => import("../pages/auth/ResetPassword"));
@@ -19,6 +21,10 @@ const AcceptInvite = lazy(() => import("../pages/auth/AcceptInvite"));
 const CreateCompany = lazy(() => import("../pages/auth/CreateCompany"));
 
 const Dashboard = lazy(() => import("../pages/dashboard/Dashboard"));
+const Instructor = lazy(() => import("../pages/dashboard/Instructor"));
+const Student = lazy(() => import("../pages/dashboard/Student"));
+const StudentManagement = lazy(() => import("../pages/dashboard/StudentManagement"));
+const InstructorManagement = lazy(() => import("../pages/dashboard/InstructorManagement"));
 const OrganizationManager = lazy(() => import("../pages/dashboard/OrganizationManager"));
 const Profile = lazy(() => import("../pages/dashboard/Profile"));
 const Sessions = lazy(() => import("../pages/dashboard/Sessions"));
@@ -42,6 +48,8 @@ export default function AppRoutes() {
           <Routes>
             <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
             <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
+            <Route path="/student-signup" element={<GuestRoute><StudentSignup /></GuestRoute>} />
+            <Route path="/student-setup" element={<GuestRoute><StudentAccountSetup /></GuestRoute>} />
             <Route path="/verify-email" element={<GuestRoute><VerifyEmail /></GuestRoute>} />
             <Route path="/forgot-password" element={<GuestRoute><ForgotPassword /></GuestRoute>} />
             <Route path="/reset-password" element={<GuestRoute><ResetPassword /></GuestRoute>} />
@@ -71,6 +79,10 @@ export default function AppRoutes() {
               <Route path="company" element={<Navigate to="/dashboard/organization" replace />} />
               <Route path="profile" element={<Profile />} />
               <Route path="sessions" element={<Sessions />} />
+              <Route path="instructor" element={<RoleGuard><Instructor /></RoleGuard>} />
+              <Route path="instructors" element={<RoleGuard><InstructorManagement /></RoleGuard>} />
+              <Route path="student" element={<RoleGuard><Student /></RoleGuard>} />
+              <Route path="students" element={<RoleGuard><StudentManagement /></RoleGuard>} />
               <Route path="*" element={<NotFound embedded />} />
             </Route>
 
