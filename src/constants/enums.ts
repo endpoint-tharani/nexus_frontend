@@ -264,6 +264,8 @@ export const CompanyRole = {
   HR: "HR",
   EMPLOYEE: "EMPLOYEE",
   SUPER_ADMIN: "SUPER_ADMIN",
+  INSTRUCTOR: "INSTRUCTOR",
+  STUDENT: "STUDENT",
 } as const;
 export type CompanyRole = (typeof CompanyRole)[keyof typeof CompanyRole];
 
@@ -276,6 +278,8 @@ export const COMPANY_ROLE_LABELS: Record<CompanyRole, string> = {
   HR: "HR Manager",
   EMPLOYEE: "Employee",
   SUPER_ADMIN: "Super Admin",
+  INSTRUCTOR: "Instructor",
+  STUDENT: "Student",
 };
 
 // MUI Chip color per role — used by the team management table.
@@ -291,6 +295,8 @@ export const COMPANY_ROLE_COLORS: Record<
   HR: "secondary",
   EMPLOYEE: "default",
   SUPER_ADMIN: "primary",
+  INSTRUCTOR: "info",
+  STUDENT: "secondary",
 };
 
 // Roles that an owner may invite as staff (OWNER/EMPLOYEE are not invitable here).

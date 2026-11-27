@@ -36,6 +36,8 @@ export interface Company {
   // absent value is treated as open (the gate is opt-in until the backend sends
   // it). Toggled from Company Settings; read by `useEmployeeViewLocked`.
   employeeViewEnabled?: boolean;
+  /** Whether self-registration admission codes are currently accepted. */
+  studentSelfRegistrationEnabled?: boolean;
   // Extended Statutory & Company Master Fields
   displayName?: string;
   code?: string;

@@ -70,6 +70,15 @@ export const verifyLoginOtp = (email: string, otp: string) =>
     otp,
   } satisfies VerifyLoginOtpPayload);
 
+// Student accounts created by staff use a separate one-time setup flow before
+// password login is enabled. The request endpoint intentionally returns a
+// generic success response regardless of account eligibility.
+export const requestStudentSetup = (email: string) =>
+  api.post<MessageResponse>("/auth/request-student-setup", { email });
+
+export const completeStudentSetup = (email: string, otp: string, password: string) =>
+  api.post<MessageResponse>("/auth/complete-student-setup", { email, otp, password });
+
 export const logout = async () => {
   try {
     await api.post<MessageResponse>("/auth/logout");

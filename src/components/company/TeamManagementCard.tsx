@@ -57,6 +57,8 @@ const AVATAR_BG: Record<CompanyRole, string> = {
   HR: "#7C3AED",
   EMPLOYEE: "#6B7280",
   SUPER_ADMIN: "#DC2626",
+  INSTRUCTOR: "#0EA5E9",
+  STUDENT: "#7C3AED",
 };
 
 export default function TeamManagementCard({ canManage }: TeamManagementCardProps) {
