@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { MdAccountTree, MdBusiness, MdDashboard, MdDevices, MdPerson, MdSchool, MdMenuBook, MdGroups } from "react-icons/md";
+import { MdAccountTree, MdBusiness, MdDashboard, MdDevices, MdPerson, MdSchool, MdMenuBook } from "react-icons/md";
 
 import { CompanyRole } from "../../constants/enums";
 import { useActiveBranch, useBranches } from "../../hooks/branch";
@@ -15,20 +15,27 @@ const Profile = lazy(() => import("../../pages/dashboard/Profile"));
 const Sessions = lazy(() => import("../../pages/dashboard/Sessions"));
 const Instructor = lazy(() => import("../../pages/dashboard/Instructor"));
 const Student = lazy(() => import("../../pages/dashboard/Student"));
-const StudentManagement = lazy(() => import("../../pages/dashboard/StudentManagement"));
 const InstructorManagement = lazy(() => import("../../pages/dashboard/InstructorManagement"));
+const StudentManagement = lazy(() => import("../../pages/dashboard/StudentManagement"));
 
-const { OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, HR, EMPLOYEE, SUPER_ADMIN } =
-  CompanyRole;
+const { OWNER, ADMIN, COMPANY_ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, HR, EMPLOYEE, SUPER_ADMIN } = CompanyRole;
 const INSTRUCTOR = CompanyRole.INSTRUCTOR;
 const STUDENT = CompanyRole.STUDENT;
-const STUDENT_MANAGERS = [OWNER, ADMIN, SUPER_ADMIN] as const;
 const INSTRUCTOR_MANAGERS = [OWNER, ADMIN, SUPER_ADMIN] as const;
-const ALL = [OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, HR, EMPLOYEE, SUPER_ADMIN, INSTRUCTOR, STUDENT] as const;
+const ALL = [OWNER, ADMIN, COMPANY_ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, HR, EMPLOYEE, SUPER_ADMIN, INSTRUCTOR, STUDENT] as const;
 const ORG_ADMINS = [OWNER, ADMIN, SUPER_ADMIN] as const;
 const BRANCH_ADMINS = [OWNER, ADMIN, BRANCH_ADMIN, SUPER_ADMIN] as const;
 const DEPARTMENT_ADMINS = [OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, SUPER_ADMIN] as const;
 const ORG_MANAGERS = [OWNER, ADMIN, BRANCH_ADMIN, DEPARTMENT_ADMIN, SUPER_ADMIN] as const;
+const STUDENT_MANAGERS = [
+  OWNER,
+  ADMIN,
+  COMPANY_ADMIN,
+  BRANCH_ADMIN,
+  DEPARTMENT_ADMIN,
+  HR,
+  SUPER_ADMIN,
+] as const;
 
 function BranchCountWidget() {
   const { data = [], isLoading } = useBranches();
@@ -68,7 +75,10 @@ export const coreModule: ModuleDefinition = {
   nav: [
     {
       label: "",
-      items: [{ label: "Dashboard", path: "/dashboard", icon: MdDashboard, roles: ALL }],
+      items: [
+        { label: "Dashboard", path: "/dashboard", icon: MdDashboard, roles: ALL },
+        { label: "Students", path: "/dashboard/students", icon: MdSchool, roles: STUDENT_MANAGERS },
+      ],
     },
     {
       label: "",
@@ -81,10 +91,6 @@ export const coreModule: ModuleDefinition = {
     {
       label: "",
       items: [{ label: "Student", path: "/dashboard/student", icon: MdMenuBook, roles: [STUDENT] }],
-    },
-    {
-      label: "",
-      items: [{ label: "Students", path: "/dashboard/students", icon: MdGroups, roles: STUDENT_MANAGERS }],
     },
   ],
   accountNav: [

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Box, Tabs, Tab, Skeleton } from "@mui/material";
+import { Box, Paper, Tab, Tabs, Typography, Skeleton } from "@mui/material";
 
 import { useMe } from "../../hooks/user";
 import { ErrorState } from "../../components/common";
@@ -8,8 +8,6 @@ import { getErrorMessage } from "../../utils/errorHandler";
 import type { User } from "../../types";
 
 import {
-  ProfileHeader,
-  AccountStatusCard,
   ProfileOverviewCard,
   PasswordCard,
   SessionsCard,
@@ -37,16 +35,10 @@ export default function ProfilePage() {
 
   if (!user && isLoading) {
     return (
-      <Box sx={{ maxWidth: 1200, mx: "auto", display: "flex", flexDirection: "column", gap: 3 }}>
-        <Skeleton variant="rounded" height={220} sx={{ borderRadius: "16px" }} />
-        <Skeleton variant="rounded" height={100} sx={{ borderRadius: "16px" }} />
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Skeleton variant="rectangular" width={240} height={40} />
-        </Box>
-        <Box sx={{ display: "grid", gap: 3, gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" } }}>
-          <Skeleton variant="rounded" height={320} sx={{ borderRadius: "16px" }} />
-          <Skeleton variant="rounded" height={320} sx={{ borderRadius: "16px" }} />
-        </Box>
+      <Box sx={{ maxWidth: 1120, mx: "auto", display: "flex", flexDirection: "column", gap: 2.5 }}>
+        <Skeleton variant="rounded" height={80} sx={{ borderRadius: 3 }} />
+        <Skeleton variant="rounded" height={58} sx={{ borderRadius: 3 }} />
+        <Skeleton variant="rounded" height={360} sx={{ borderRadius: 3 }} />
       </Box>
     );
   }
@@ -68,48 +60,66 @@ export default function ProfilePage() {
   }
 
   return (
-    <Box sx={{ maxWidth: 1200, mx: "auto", display: "flex", flexDirection: "column", gap: 3 }}>
-      {/* 1. Header Banner */}
-      <ProfileHeader user={user} onTabChange={setActiveTab} />
-
-      {/* 2. Account Status overview chips */}
-      <AccountStatusCard user={user} />
-
-      {/* 3. Navigation Tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: "divider", mt: 1 }}>
+    <Box sx={{ maxWidth: 1120, mx: "auto", pb: 4 }}>
+      <Box sx={{ mb: 2.5 }}>
+        <Typography
+          variant="overline"
+          sx={{ color: "primary.main", fontWeight: 700, letterSpacing: "0.12em" }}
+        >
+          YOUR ACCOUNT
+        </Typography>
+        <Typography
+          component="h1"
+          variant="h4"
+          sx={{ mt: 0.25, fontWeight: 750, letterSpacing: "-0.035em" }}
+        >
+          My profile
+        </Typography>
+        <Typography color="text.secondary" sx={{ mt: 0.5 }}>
+          Update your personal details or manage your account security.
+        </Typography>
+      </Box>
+      <Paper
+        variant="outlined"
+        sx={{
+          maxWidth: 880,
+          mb: 2.5,
+          px: { xs: 1, sm: 1.5 },
+          borderRadius: 3,
+          bgcolor: "background.paper",
+        }}
+      >
         <Tabs
           value={activeTab}
           onChange={(_, idx) => setActiveTab(idx)}
-          aria-label="profile information tabs"
+          aria-label="Profile sections"
+          variant="scrollable"
+          allowScrollButtonsMobile
           sx={{
-            "& .MuiTabs-indicator": { bgcolor: "#2563EB" },
+            minHeight: 56,
+            "& .MuiTabs-indicator": { height: 3, borderRadius: "3px 3px 0 0" },
             "& .MuiTab-root": {
+              minHeight: 56,
+              px: { xs: 1.5, sm: 2.5 },
               textTransform: "none",
               fontWeight: 600,
-              fontSize: "15px",
-              color: "#6B7280",
-              "&.Mui-selected": { color: "#2563EB" },
+              fontSize: "0.925rem",
             },
           }}
         >
-          <Tab label="Profile Overview" />
-          <Tab label="Security &amp; Sessions" />
+          <Tab label="Profile details" />
+          <Tab label="Security" />
         </Tabs>
-      </Box>
+      </Paper>
 
-      {/* 4. Tab Content */}
-      <Box sx={{ minHeight: 400 }}>
+      <Box>
         {activeTab === 0 && (
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-            <ProfileOverviewCard user={user} />
-          </Box>
+          <ProfileOverviewCard user={user} />
         )}
 
         {activeTab === 1 && (
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            {/* Active Sessions list */}
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
             <SessionsCard />
-
             <Box sx={{ maxWidth: 640 }}>
               <PasswordCard />
             </Box>

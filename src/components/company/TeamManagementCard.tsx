@@ -51,6 +51,7 @@ const initials = (name: string) => {
 const AVATAR_BG: Record<CompanyRole, string> = {
   OWNER: "#16A34A",
   ADMIN: "#2563EB",
+  COMPANY_ADMIN: "#1D4ED8",
   BRANCH_ADMIN: "#0891B2",
   DEPARTMENT_ADMIN: "#0D9488",
   HR: "#7C3AED",

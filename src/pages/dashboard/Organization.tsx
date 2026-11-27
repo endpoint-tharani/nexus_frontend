@@ -1,19 +1,22 @@
 import { useState } from "react";
 import {
   Alert,
+  Avatar,
   Box,
   Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   Grid,
+  Paper,
   Skeleton,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import { MdEdit } from "react-icons/md";
+import { MdBusiness, MdEdit, MdEmail, MdLocationOn, MdPhone } from "react-icons/md";
 import toast from "react-hot-toast";
 
 import { PageHeader, SectionCard } from "../../components/ui";
@@ -88,16 +91,86 @@ export default function Organization() {
           ) : undefined
         }
       />
-      <SectionCard title={organization.name}>
-        <Grid container spacing={2}>
+      <SectionCard
+        title="Organization profile"
+        subtitle="The core contact details associated with your organization."
+        sx={{ borderRadius: 3 }}
+        contentSx={{ pt: 0 }}
+      >
+        <Paper
+          variant="outlined"
+          sx={{
+            p: { xs: 2, sm: 2.5 },
+            mb: 2.5,
+            borderRadius: 2.5,
+            background: (theme) =>
+              `linear-gradient(120deg, ${theme.palette.primary.main}12, ${theme.palette.background.paper} 72%)`,
+          }}
+        >
+          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+            <Avatar
+              variant="rounded"
+              sx={{
+                width: 54,
+                height: 54,
+                borderRadius: 2.5,
+                bgcolor: "primary.main",
+                color: "primary.contrastText",
+              }}
+            >
+              <MdBusiness size={26} />
+            </Avatar>
+            <Box sx={{ minWidth: 0, flex: 1 }}>
+              <Typography variant="overline" color="text.secondary" sx={{ lineHeight: 1.4 }}>
+                ORGANIZATION
+              </Typography>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: 700, overflowWrap: "anywhere", lineHeight: 1.35 }}
+              >
+                {organization.name}
+              </Typography>
+            </Box>
+            <Chip
+              size="small"
+              label="Organization profile"
+              color="primary"
+              variant="outlined"
+              sx={{ display: { xs: "none", sm: "inline-flex" } }}
+            />
+          </Box>
+        </Paper>
+        <Grid container spacing={1.5}>
           {[
-            ["Email", organization.email],
-            ["Phone", organization.phone],
-            ["Address", organization.address],
-          ].map(([label, value]) => (
+            { label: "Email address", value: organization.email, icon: <MdEmail size={19} /> },
+            { label: "Phone number", value: organization.phone, icon: <MdPhone size={19} /> },
+            { label: "Address", value: organization.address, icon: <MdLocationOn size={19} /> },
+          ].map(({ label, value, icon }) => (
             <Grid key={label} size={{ xs: 12, md: 4 }}>
-              <Typography variant="caption" color="text.secondary">{label}</Typography>
-              <Typography variant="body1">{value || "Not provided"}</Typography>
+              <Paper
+                variant="outlined"
+                sx={{
+                  height: "100%",
+                  minHeight: 112,
+                  p: 2,
+                  borderRadius: 2.5,
+                  bgcolor: "action.hover",
+                  borderColor: "divider",
+                }}
+              >
+                <Box sx={{ display: "flex", gap: 1, alignItems: "center", mb: 1 }}>
+                  <Box sx={{ display: "flex", color: "primary.main" }}>{icon}</Box>
+                  <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 600 }}>
+                    {label}
+                  </Typography>
+                </Box>
+                <Typography
+                  variant="body2"
+                  sx={{ fontWeight: 550, overflowWrap: "anywhere", lineHeight: 1.6 }}
+                >
+                  {value || "Not provided"}
+                </Typography>
+              </Paper>
             </Grid>
           ))}
         </Grid>

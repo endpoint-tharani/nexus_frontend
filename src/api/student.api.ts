@@ -1,4 +1,5 @@
 import api from "./axios";
+import type { StudentListResponse as BasicStudentListResponse } from "../types";
 
 export type StudentStatus = "PENDING_APPROVAL" | "ACTIVE" | "SUSPENDED" | "INACTIVE" | "ARCHIVED" | "REJECTED";
 export interface StudentListParams { branchId?: string; departmentId?: string; status?: StudentStatus; search?: string; page?: number; limit?: number }
@@ -36,7 +37,7 @@ export const createStudent = (companyId: string, payload: CreateStudentPayload) 
   api.post(`/students?companyId=${encodeURIComponent(companyId)}`, payload);
 export const updateStudent = (companyId: string, studentId: string, payload: UpdateStudentPayload) =>
   api.patch(`/students/${studentId}?companyId=${encodeURIComponent(companyId)}`, payload);
-export const setStudentStatus = (companyId: string, studentId: string, status: Exclude<StudentStatus, "PENDING_APPROVAL" | "REJECTED">) =>
+export const setStudentStatus = (companyId: string, studentId: string, status: StudentStatus) =>
   api.patch(`/students/${studentId}/status?companyId=${encodeURIComponent(companyId)}`, { status });
 export const approveStudent = (companyId: string, studentId: string) =>
   api.post(`/students/${studentId}/approve?companyId=${encodeURIComponent(companyId)}`);
@@ -78,3 +79,11 @@ export const getMyStudentActivities = (page = 1, limit = 20) =>
 
 export const updateMyStudentProfile = (data: Pick<StudentSelfProfile, "phone" | "address" | "guardianName" | "guardianPhone" | "guardianEmail" | "emergencyContact">) =>
   api.patch<{ success: boolean; message: string; data: StudentSelfProfile }>("/student/me", data);
+// Compatibility wrapper used by the core student list and its query hooks.
+export const getStudents = (
+  companyId: string,
+  params: import("../types").StudentListParams = {}
+) =>
+  api.get<BasicStudentListResponse>("/students", {
+    params: { companyId, ...params },
+  });
